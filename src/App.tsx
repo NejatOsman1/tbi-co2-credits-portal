@@ -553,7 +553,12 @@ export default function App(): JSX.Element {
     currentStep.key === "publiceer" && currentSub.key === "overzicht";
   /** Custom Prescan questions block — vertical alignment */
 const PrescanQuestions = ({ model }: { model: FormModel }) => (
+
+
   <Box sx={{ display: "grid", gap: 2 }}>
+    <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 300}}>
+          (Vragen nader te specificeren)
+    </Typography>
     {/* Q1: fase — full width */}
     <Box>
       <SelectField
@@ -659,7 +664,7 @@ const PrescanQuestions = ({ model }: { model: FormModel }) => (
                       "&:hover": { bgcolor: "#f7ebfb", borderColor: primaryColor },
                     }}
                   >
-                    Back
+                    Terug
                   </Button>
 
                   {/* Next / Submit */}
@@ -672,7 +677,7 @@ const PrescanQuestions = ({ model }: { model: FormModel }) => (
                       "&:hover": { bgcolor: primaryHover },
                     }}
                   >
-                    Next
+                    Volgende
                   </Button>
                 </Box>
               </AutoForm>
