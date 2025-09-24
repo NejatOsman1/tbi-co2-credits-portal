@@ -25,7 +25,7 @@ import {
   NestField,
   ListItemField,
   // ListAddField,
-  // ListDelField,
+  ListDelField,
 } from "uniforms-mui";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { ZodBridge } from "uniforms-bridge-zod";
@@ -264,7 +264,7 @@ function QuickScanFields() {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr 1fr 1fr" },
+              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr 1fr 1fr auto" }, // <-- space for the "-" button
               gap: 2,
               alignItems: "center",
             }}
@@ -272,14 +272,15 @@ function QuickScanFields() {
             <FabrikantField />
             <ProductCategoryField />
             <NumField name="aantal" label="Aantal" decimal={false} fullWidth />
-            <TextField
-              name="eenheid"
-              label="Eenheid"
-              placeholder="st., m², kWp..."
-              fullWidth
-            />
+            <TextField name="eenheid" label="Eenheid" placeholder="st., m², kWp..." fullWidth />
+
+            {/* Delete row button */}
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <ListDelField name="" />
+            </Box>
           </Box>
         </NestField>
+
       </ListField>
 
       {/* ---- TOTAL ---- */}
