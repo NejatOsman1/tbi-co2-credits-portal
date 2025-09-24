@@ -22,14 +22,21 @@ import {
   NumField,
   TextField,
   ListField,
+  NestField,
   ListItemField,
-  ListAddField,
-  ListDelField,
-  RadioField,
+  // ListAddField,
+  // ListDelField,
 } from "uniforms-mui";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { ZodBridge } from "uniforms-bridge-zod";
 import { z } from "zod";
+import { useForm, useField } from "uniforms";
+import {
+  manufacturers,
+  productsByManufacturer,
+  carbonByPair,
+} from "./data/productCatalog";
+import { calcTotalTonCO2e, formatTonCO2e } from "./calculateCO2"
 
 /***********************
  * THEME COLORS
@@ -48,92 +55,63 @@ const theme = createTheme({
 /***********************
  * TYPES & SCHEMAS
  ***********************/
-const typeProductOptions = [
-  "Structural: CLT or LVL",
-  "Structural: bamboo",
-  "Fibers: wood",
-  "Fibers: straw",
-  "Fibers: grass/bamboo",
-  "Fibers: hemp or flax",
-  "Composite: wood-based",
-] as const;
-
-const typeProductCategory = [
-  "Floors",
-  "Ceilings",
-  "Frames and walls",
-  "Insulation",
-  "Roofs",
-  "Boards",
-  "Planks and beams",
-] as const;
-
-const fabrikant = [
-  "SIA Amber Wood",
-  "Ekolution AB",
-  "Russwood Ltd",
-  "EcoCocon s.r.o.",
-  "Aveco de Bondt",
-] as const;
-
 const bouwFasen = ["Ontwerp", "Aanbesteding", "Bouw", "Afgerond"] as const;
 const jaNeeMaybe = ["Ja", "Nee", "Weet ik nog niet"] as const;
 const aantalm2 = ["Minder dan 100 m2", "Meer dan 100 m2"] as const;
 
+// Helper to validate the pair against the catalog
+const isValidPair = (m?: string, p?: string) =>
+  !!m && !!p && Array.isArray(productsByManufacturer[m]) && productsByManufacturer[m].includes(p as string);
 
 /** Full model covers all substeps */
+// Define a plain row schema (no refine here)
+const quickScanRow = z.object({
+  fabrikant: z.string().min(1, "Kies een fabrikant"),
+  productCategory: z.string().min(1, "Kies een product"),
+  aantal: z.number().positive({ message: "Voer een positief getal in" }),
+  eenheid: z.string().min(1, "Verplicht veld"),
+});
+
+// Use the plain row in FullSchema
 export const FullSchema = z.object({
-  /** Prescan */
   prescanFase: z.enum(bouwFasen).optional(),
   prescanBio: z.enum(jaNeeMaybe).optional(),
-  aantalm2:  z.enum(aantalm2).optional(),
+  aantalm2: z.enum(aantalm2).optional(),
 
-  /** Quick scan -> Product en Materialen */
-  quickScan: z
-    .array(
-      z.object({
-        typeProduct: z.enum(typeProductOptions),
-        productCategory: z.enum(typeProductCategory),
-        fabrikant: z.enum(fabrikant),
-        aantal: z.number().positive({ message: "Voer een positief getal in" }),
-        eenheid: z.string().min(1, "Verplicht veld"),
-      })
-    )
-    .optional(),
+  quickScan: z.array(quickScanRow).optional(),  // <-- no refine here
 
-  /** Quick scan -> Oncra scan resultaat (dummy) */
   oncraScore: z.number().optional(),
   oncraOpmerking: z.string().optional(),
-
-  /** Project validatie */
   projectplanTitel: z.string().optional(),
   projectplanBeschrijving: z.string().optional(),
   bewijsLinks: z.array(z.string().url("Voer een geldige URL in")).optional(),
   validatieGoedgekeurd: z.boolean().optional(),
   validatieToelichting: z.string().optional(),
-
-  /** Publiceer */
   fotoUrls: z.array(z.string().url("Voer een geldige URL in")).optional(),
   verkoopKanaal: z.enum(["Marketplace", "Direct", "Veiling"] as const).optional(),
   koperNaam: z.string().optional(),
   verkoopBedrag: z.number().optional(),
 });
+
+// Step-level validation: check pairs with superRefine on the *array*
+const requireAtLeastOneQuickItem = z.object({
+  quickScan: z.array(quickScanRow).min(1, "Voeg minimaal één item toe"),
+}).superRefine((data, ctx) => {
+  data.quickScan?.forEach((row, idx) => {
+    if (!isValidPair(row.fabrikant, row.productCategory)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["quickScan", idx, "productCategory"],
+        message: "Product hoort niet bij de gekozen fabrikant",
+      });
+    }
+  });
+});
+
 export type FormModel = z.infer<typeof FullSchema>;
 
 /** Validation per substep */
-const requireAtLeastOneQuickItem = z.object({
-  quickScan: z
-    .array(
-      z.object({
-        typeProduct: z.enum(typeProductOptions, { required_error: "Kies een producttype" }),
-        productCategory: z.enum(typeProductCategory, { required_error: "" }),
-        fabrikant: z.enum(fabrikant, { required_error: "Kies een fabrikant" }),
-        aantal: z.number().positive({ message: "Voer een positief getal in" }),
-        eenheid: z.string().min(1, "Verplicht veld"),
-      })
-    )
-    .min(1, "Voeg minimaal één item toe"),
-});
+
 
 const prescanSchema = z.object({
   prescanFase: z.enum(bouwFasen, { required_error: "Kies een fase" }),
@@ -212,9 +190,69 @@ function Review({ model }: { model: FormModel }) {
 }
 
 /***********************
- * QUICK SCAN FIELDS (Product en Materialen)
+ * Dependent Select helpers (Uniforms)
  ***********************/
+// Fabrikant (manufacturer) — always provide options
+// Fabrikant: simple select, no custom onChange needed
+function FabrikantField() {
+  const mfrOptions = (manufacturers ?? []).map(v => ({ label: v, value: v }));
+  return (
+    <SelectField
+      name="fabrikant"
+      label="Fabrikant"
+      fullWidth
+      options={mfrOptions}
+    />
+  );
+}
+
+// Product: options depend on current row's fabrikant
+function ProductCategoryField() {
+  // In v4 you MUST pass the 2nd arg; no generic here
+  const [{ value: selectedMfr }] = useField("fabrikant", { initialValue: false });
+  const products = selectedMfr ? (productsByManufacturer[selectedMfr] ?? []) : [];
+  const prodOptions = products.map(v => ({ label: v, value: v }));
+
+  return (
+    <SelectField
+      name="productCategory"
+      label="Product"
+      fullWidth
+      options={prodOptions}
+      disabled={!selectedMfr}
+      placeholder={selectedMfr ? "Kies product" : "Eerst fabrikant kiezen"}
+    />
+  );
+}
+
+/**
+ * Keeps the row consistent:
+ * - When fabrikant changes, clear productCategory if it's not valid for that fabrikant
+ */
+function RowScopeEffects() {
+  const form = useForm();
+  const [{ value: fabrikant }] = useField("fabrikant", { initialValue: false });
+  const [{ value: product }]   = useField("productCategory", { initialValue: false });
+
+  React.useEffect(() => {
+    const allowed = fabrikant ? (productsByManufacturer[fabrikant] ?? []) : [];
+    if (!fabrikant && product !== undefined) {
+      form.onChange("productCategory", undefined);
+      return;
+    }
+    if (product && !allowed.includes(product)) {
+      form.onChange("productCategory", undefined);
+    }
+  }, [fabrikant, product, form]);
+
+  return null;
+}
+
 function QuickScanFields() {
+  const [{ value: rows = [] }] = useField("quickScan", { initialValue: false });
+
+  const totalTon = calcTotalTonCO2e(rows);
+
   return (
     <Box>
       <Typography variant="subtitle2" sx={{ mb: 1 }}>
@@ -222,28 +260,55 @@ function QuickScanFields() {
       </Typography>
 
       <ListField name="quickScan">
-        <ListItemField name="$">
+        <NestField name="$">
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr 1fr 1fr 1fr auto" },
+              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr 1fr 1fr" },
               gap: 2,
               alignItems: "center",
             }}
           >
-            <SelectField name="typeProduct" label="Materiaal" allowedValues={typeProductOptions as unknown as string[]} fullWidth />
-            <SelectField name="productCategory" label="Product category" allowedValues={typeProductCategory as unknown as string[]} fullWidth />
-            <SelectField name="fabrikant" label="Fabrikant" allowedValues={fabrikant as unknown as string[]} fullWidth />
+            <FabrikantField />
+            <ProductCategoryField />
             <NumField name="aantal" label="Aantal" decimal={false} fullWidth />
-            <TextField name="eenheid" label="Eenheid" placeholder="st., m², kWp..." fullWidth />
-            {/* <ListDelField name="" /> */}
+            <TextField
+              name="eenheid"
+              label="Eenheid"
+              placeholder="st., m², kWp..."
+              fullWidth
+            />
           </Box>
-        </ListItemField>
-        {/* <Box sx={{ mt: 1 }}><ListAddField name="$" /></Box> */}
+        </NestField>
       </ListField>
+
+      {/* ---- TOTAL ---- */}
+      <Box
+        sx={{
+          mt: 3,
+          p: 2,
+          borderRadius: 2,
+          bgcolor: "grey.100",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+          Totaal t CO₂e
+        </Typography>
+        <Typography
+          variant="subtitle1"
+          sx={{ fontWeight: 600, color: "success.main" }}
+        >
+          {formatTonCO2e(totalTon)}
+        </Typography>
+      </Box>
     </Box>
   );
 }
+
+
 
 /***********************
  * Small helpers for sidebar icons
@@ -265,9 +330,7 @@ function DoneCircle() {
   );
 }
 function PendingCircle({ active }: { active?: boolean }) {
-  return (
-    <RadioButtonUncheckedIcon fontSize="small" sx={{ color: active ? textColour : undefined }} />
-  );
+  return <RadioButtonUncheckedIcon fontSize="small" sx={{ color: active ? textColour : undefined }} />;
 }
 
 /***********************
@@ -295,7 +358,7 @@ const steps: StepDef[] = [
       {
         key: "prescan-main",
         label: "Prescan",
-        fields: ["prescanFase", "prescanBio", "aantalm2" ],
+        fields: ["prescanFase", "prescanBio", "aantalm2"],
         zod: prescanSchema,
         render: "prescanQuestions",
       },
@@ -458,12 +521,11 @@ export default function App(): JSX.Element {
   const [activeStep, setActiveStep] = useState<number>(0);
   const [activeSub, setActiveSub] = useState<number>(0);
 
-  // Pre-initialize a valid quick-scan row to avoid early validation failures
-  const [model, setModel] = useState<FormModel>({
+  const initialMfr = "Ekolution AB";
+  const initialProduct = productsByManufacturer[initialMfr][0];
 
-    quickScan: [
-      { typeProduct: "Fibers: wood", productCategory: "Ceilings", fabrikant: "Ekolution AB", aantal: 1, eenheid: "m2" },
-    ],
+  const [model, setModel] = useState<FormModel>({
+    quickScan: [{ fabrikant: initialMfr, productCategory: initialProduct, aantal: 1, eenheid: "m²" }],
   });
 
   const formRef = useRef<any>(null);
@@ -549,63 +611,38 @@ export default function App(): JSX.Element {
     goNext();
   };
 
-  const isFinalOverview =
-    currentStep.key === "publiceer" && currentSub.key === "overzicht";
-  /** Custom Prescan questions block — vertical alignment */
-const PrescanQuestions = ({ model }: { model: FormModel }) => (
+  const isFinalOverview = currentStep.key === "publiceer" && currentSub.key === "overzicht";
 
-
-  <Box sx={{ display: "grid", gap: 2 }}>
-    <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 300}}>
-          (Vragen nader te specificeren)
-    </Typography>
-    {/* Q1: fase — full width */}
-    <Box>
-      <SelectField
-        name="prescanFase"
-        label="In welke fase van het bouwproces bent u?"
-        allowedValues={bouwFasen as unknown as string[]}
-        fullWidth
-      />
-    </Box>
-
-    {/* Q2: dropdown Ja/Nee/Weet ik nog niet */}
-    <Box>
-      <SelectField
-        name="prescanBio"
-        label="Overweegt u om bio-based materialen toe te passen in uw project?"
-        allowedValues={jaNeeMaybe as unknown as string[]}
-        fullWidth
-      />
-    </Box>
-
-    {/* Q3: numeric */}
-    <Box>
-      <SelectField
-        name="aantalm2"
-        label="Wat is de omvang van het project in vloeroppervlak (m²)?"
-        fullWidth
-      />
-    </Box>
-
-    {(model?.prescanBio === "Ja" || model?.prescanBio === "Weet ik nog niet") &&
-    model?.aantalm2 === "Meer dan 100 m2" ? (
-      <Box sx={{ mt: 3 }}>
-        <Typography variant="body1" sx={{ fontWeight: 600, color: "success.main" }}>
-          U komt in aanmerking voor CO2 credits! Klik op volgende om te berekenen
-          hoeveel CO2 credits uw project kan opleveren.
-        </Typography>
+  const PrescanQuestions = ({ model }: { model: FormModel }) => (
+    <Box sx={{ display: "grid", gap: 2 }}>
+      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 300 }}>
+        (Vragen nader te specificeren)
+      </Typography>
+      <Box>
+        <SelectField name="prescanFase" label="In welke fase van het bouwproces bent u?" allowedValues={bouwFasen as unknown as string[]} fullWidth />
       </Box>
-    ) : model?.prescanBio === "Nee" || model?.aantalm2 === "Minder dan 100 m2" ? (
-      <Box sx={{ mt: 3 }}>
-        <Typography variant="body1" sx={{ fontWeight: 600, color: "error.main" }}>
-          Helaas dit project komt niet in aanmerking voor CO2 credits.
-        </Typography>
+      <Box>
+        <SelectField name="prescanBio" label="Overweegt u om bio-based materialen toe te passen in uw project?" allowedValues={jaNeeMaybe as unknown as string[]} fullWidth />
       </Box>
-    ) : null}
+      <Box>
+        <SelectField name="aantalm2" label="Wat is de omvang van het project in vloeroppervlak (m²)?" allowedValues={aantalm2 as unknown as string[]} fullWidth />
+      </Box>
 
-  </Box>
-);
+      {(model?.prescanBio === "Ja" || model?.prescanBio === "Weet ik nog niet") && model?.aantalm2 === "Meer dan 100 m2" ? (
+        <Box sx={{ mt: 3 }}>
+          <Typography variant="body1" sx={{ fontWeight: 600, color: "success.main" }}>
+            U komt in aanmerking voor CO2 credits! Klik op volgende om te berekenen hoeveel CO2 credits uw project kan opleveren.
+          </Typography>
+        </Box>
+      ) : model?.prescanBio === "Nee" || model?.aantalm2 === "Minder dan 100 m2" ? (
+        <Box sx={{ mt: 3 }}>
+          <Typography variant="body1" sx={{ fontWeight: 600, color: "error.main" }}>
+            Helaas dit project komt niet in aanmerking voor CO2 credits.
+          </Typography>
+        </Box>
+      ) : null}
+    </Box>
+  );
 
   /** Fields UI */
   const ContentFields =
@@ -652,7 +689,6 @@ const PrescanQuestions = ({ model }: { model: FormModel }) => (
                 <Divider sx={{ my: 3 }} />
 
                 <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
-                  {/* Back */}
                   <Button
                     variant="outlined"
                     disabled={activeStep === 0 && activeSub === 0}
@@ -667,7 +703,6 @@ const PrescanQuestions = ({ model }: { model: FormModel }) => (
                     Terug
                   </Button>
 
-                  {/* Next / Submit */}
                   <Button
                     variant="contained"
                     onClick={() => formRef.current?.submit()}
