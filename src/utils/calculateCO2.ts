@@ -1,5 +1,5 @@
 // ---- CO2 helpers ----
-import { carbonByPair } from "./data/productCatalog";
+import { carbonByPair } from "../data/productCatalog.js";
 
 type QuickRow = {
   fabrikant?: string;
@@ -16,9 +16,10 @@ export function getCarbonForRow(row: QuickRow): number | undefined {
   return typeof v === "number" ? v : undefined;
 }
 
-export function calcTonCO2e(carbon: number, aantal: number | undefined): number {
-  const qty = typeof aantal === "number" && !Number.isNaN(aantal) ? aantal : 1;
-  return 0.0001 * carbon * qty - CO2_BASELINE;
+export function calcTonCO2e(carbon: number, quantity: number | undefined, m2: number | undefined): number {
+  const baseline = m2 * 0.0001 * 10;
+  const qty = typeof quantity === "number" && !Number.isNaN(quantity) ? quantity : 1;
+  return baseline- 0.0001 * carbon * qty;
 }
 
 export function formatTonCO2e(n: number | undefined): string {
@@ -29,11 +30,11 @@ export function formatTonCO2e(n: number | undefined): string {
   }).format(n);
 }
 
-export function calcTotalTonCO2e(rows: QuickRow[] = []): number {
+export function calcTotalTonCO2e(rows: QuickRow[] = [], aantalm2: number): number {
   return rows.reduce((sum, row) => {
     const carbon = getCarbonForRow(row);
     if (typeof carbon === "number") {
-      sum += calcTonCO2e(carbon, row.aantal);
+      sum += calcTonCO2e(carbon, row.aantal,aantalm2);
     }
     return sum;
   }, 0);
