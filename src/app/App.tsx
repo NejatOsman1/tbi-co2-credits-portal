@@ -7,7 +7,7 @@ import theme from "./theme";
 import { bridge } from "../forms/bridge";
 import { steps } from "../config/steps";
 import type { FormModel } from "../forms/types";
-import { Sidebar } from "../components/layout/Sidebar";
+import { Sidebar } from "../components/layout/SideBar";
 import { PrescanQuestions } from "../features/prescan";
 import { QuickScanFields } from "../features/quick-scan";
 import { Review } from "../features/review";
