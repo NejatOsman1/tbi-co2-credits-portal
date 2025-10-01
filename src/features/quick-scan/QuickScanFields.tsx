@@ -1,16 +1,17 @@
 import { Box, Typography } from "@mui/material";
-import { ListField, NestField, NumField, TextField, ListDelField } from "uniforms-mui";
+import { ListField, NestField, NumField, ListDelField } from "uniforms-mui";
 import { useField, useForm } from "uniforms";
 import { calcTotalTonCO2e, formatTonCO2e } from "../../utils/calculateCO2";
 import { FabrikantField } from "./fields/FabrikantField";
 import { ProductCategoryField } from "./fields/ProductCategoryField";
+import { AutoEenheidField } from "./fields/UnitField";
 
 export function QuickScanFields() {
-  const { model } = useForm<any>();  
+  const { model } = useForm<any>();
   const [{ value: rows = [] }] = useField("quickScan", { initialValue: false });
-    
+
   const floorSize: number | undefined = model?.aantalm2;
-  const totalTon = calcTotalTonCO2e(rows,floorSize);
+  const totalTon = calcTotalTonCO2e(rows, floorSize);
 
   return (
     <Box>
@@ -31,7 +32,9 @@ export function QuickScanFields() {
             <FabrikantField />
             <ProductCategoryField />
             <NumField name="aantal" label="Aantal" decimal={false} fullWidth />
-            <TextField name="eenheid" label="Eenheid" placeholder="st., m², kWp..." fullWidth />
+            {/* Auto-populated from unitByPair[fabrikant][productCategory] */}
+            <AutoEenheidField />
+
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               <ListDelField name="" />
             </Box>

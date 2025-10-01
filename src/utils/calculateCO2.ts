@@ -8,8 +8,6 @@ type QuickRow = {
   eenheid?: string;
 };
 
-const CO2_BASELINE = 0.0001 * 10 * 450; // constant part
-
 export function getCarbonForRow(row: QuickRow): number | undefined {
   if (!row?.fabrikant || !row?.productCategory) return undefined;
   const v = carbonByPair[row.fabrikant]?.[row.productCategory];
@@ -17,9 +15,10 @@ export function getCarbonForRow(row: QuickRow): number | undefined {
 }
 
 export function calcTonCO2e(carbon: number, quantity: number | undefined, m2: number | undefined): number {
-  const baseline = m2 * 0.0001 * 10;
+
   const qty = typeof quantity === "number" && !Number.isNaN(quantity) ? quantity : 1;
-  return baseline- 0.0001 * carbon * qty;
+
+  return  0.001 * carbon * qty;
 }
 
 export function formatTonCO2e(n: number | undefined): string {
@@ -31,11 +30,15 @@ export function formatTonCO2e(n: number | undefined): string {
 }
 
 export function calcTotalTonCO2e(rows: QuickRow[] = [], aantalm2: number): number {
-  return rows.reduce((sum, row) => {
+   const baseline = aantalm2 * 0.001 * 10;
+  const total = rows.reduce((sum, row) => {
     const carbon = getCarbonForRow(row);
+
     if (typeof carbon === "number") {
       sum += calcTonCO2e(carbon, row.aantal,aantalm2);
     }
+
     return sum;
   }, 0);
+  return -baseline - total;
 }
