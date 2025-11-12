@@ -15,6 +15,8 @@ import {
 export const FullSchema = z.object({
   prescanFase: prescanSchema.shape.prescanFase.optional(),
   prescanBio: prescanSchema.shape.prescanBio.optional(),
+  preScanLifeSpanProject: prescanSchema.shape.preScanLifeSpanProject,
+  prescanFinishTimeProject: prescanSchema.shape.prescanFinishTimeProject,
   aantalm2: prescanSchema.shape.aantalm2.optional(),
 
   quickScan: z.array(quickScanRow).optional(),
