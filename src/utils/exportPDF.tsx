@@ -19,8 +19,11 @@ const ExportProductenPdfButton: React.FC = () => {
     // Title
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
+    console.log(doc.getTextColor());
+    doc.setTextColor(99, 13, 128);
+    
     doc.text('Overzicht CO2 opslag potentie', 14, 20);
-
+    doc.setTextColor(0, 0, 0);
     doc.setFontSize(11);
     doc.setFont('helvetica', 'normal');
     doc.text(`Fase bouwproject: ${bouwFase}`, 14, 30);
@@ -56,7 +59,7 @@ const ExportProductenPdfButton: React.FC = () => {
         startY: 40,
         theme: 'grid',
         styles: { fontSize: 10 },
-        headStyles: { fillColor: [46, 125, 50], textColor: 255 },
+        headStyles: { fillColor: [99, 13, 128], textColor: 255 },
         columnStyles: {
         0: { cellWidth: 12 },
         1: { cellWidth: 40 },
