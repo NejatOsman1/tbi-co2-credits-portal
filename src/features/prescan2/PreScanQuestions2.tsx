@@ -24,9 +24,9 @@ import { computeCO2Equivalent } from "../../utils/calculateCO2V2.js"
 export function PrescanQuestions2({ model }: { model: FormModel }) {
   return (
     <Box sx={{ display: "grid", gap: 2 }}>
-      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 300 }}>
+      {/* <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 300 }}>
         (Vragen nader te specificeren)
-      </Typography>
+      </Typography> */}
 
       <Box>
         <SelectField

@@ -40,7 +40,7 @@ export const steps: StepDef[] = [
       {
         key: "prescan-main",
         label: "Prescan",
-        description: "Beantwoord de prescan-vragen zodat we uw project beter kunnen inschatten.",
+        description: "Beantwoord de prescan-vragen zodat we een inschatting kunnen maken voor de CO2 opslag potentie van uw project.",
         fields: ["prescanFase2", "prescanBio2", "structuralElements", "prescanLifeSpanProject2","prescanBinnenSpouwBlad","aantalm22"],
         zod: prescanSchema2,
         render: "prescanQuestions2",
