@@ -19,7 +19,7 @@ const ExportProductenPdfButton: React.FC = () => {
     // Title
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
-    doc.text('Overzicht biobased materialen', 14, 20);
+    doc.text('Overzicht CO2 opslag potentie', 14, 20);
 
     doc.setFontSize(11);
     doc.setFont('helvetica', 'normal');
@@ -70,14 +70,21 @@ const ExportProductenPdfButton: React.FC = () => {
     // Optional: Add total carbon or summary below table
     const finalY = (doc as any).lastAutoTable.finalY || 40;
     doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    doc.text(`Totaal aantal elementen: ${producten.length}`, 14, finalY + 15);
-    doc.text(`Totaal aantal CO2 credits: ${totaalCO2credits}`, 14, finalY + 20);
-    doc.text(`Kg CO2 opslag per m² BVO : ${CO2Creditsperm2}`, 14, finalY + 25);
+
     // Save
     doc.setFont('helvetica', 'normal');
-    doc.text(`Voor de berekening worden de volgende aannames gehanteerd:`, 14, finalY + 35);
-    doc.text(`- Op basis van de ingevulde gegevens is er een schatting gemaakt van potentiële aantal CO2-credits`, 18, finalY + 40);
+    doc.text(`Voor de berekening worden de volgende aannames gehanteerd:`, 14, finalY + 15);
+    doc.text(`- Op basis van de ingevulde gegevens is er een schatting gemaakt van potentiële aantal CO2-credits`, 18, finalY + 20);
+    doc.text(`- Voor de HSB dakelementen wordt er uitgegaan van een dikte van 0,32m`, 18, finalY + 25);
+    doc.text(`- Voor de HSB dakelementen wordt er uitgegaan van een oppervlakte van 9% van het totaal oppervlak`, 18, finalY + 30);
+    doc.text(`- Voor de HSB binnenspouwblad wordt er uitgegaan van een dikte van 0,254m`, 18, finalY + 35);
+    doc.text(`- Voor de HSB binnenspouwblad wordt er uitgegaan va oppervlakte van 18% van het totaal oppervlak`, 18, finalY + 40);
+
+    doc.setFont('helvetica', 'bold');
+    
+    doc.text(`Totaal aantal CO2 credits: ${totaalCO2credits}`, 14, finalY + 60);
+    doc.text(`Kg CO2 opslag per m² BVO : ${CO2Creditsperm2}`, 14, finalY + 65);
+
     doc.save('biobased-materialen.pdf');
   };
 

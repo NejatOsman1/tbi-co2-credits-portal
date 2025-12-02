@@ -12,6 +12,7 @@ import {
 import React, { useEffect, useMemo } from "react";
 import { useField } from "uniforms";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { primaryColor } from "../../app/theme.js";
 import type { FormModel } from "../../forms/types.js";
 import { bouwFasen, jaNee, productTypes, elements } from "./schema2.js";
 import { getCarbonByType } from "../../data/productCatalog.js";
@@ -137,43 +138,33 @@ Automatic testing: add pipeliine with sql script
     </Box>
   );
 }
+
 const smallFormTheme = createTheme({
+  palette: {
+    primary: { main: primaryColor },
+  },
   components: {
     MuiFormControl: {
-      defaultProps: {
-        margin: "dense",
-      },
+      defaultProps: { margin: "dense" },
     },
     MuiTextField: {
-      defaultProps: {
-        margin: "dense",
-        size: "small",
-      },
+      defaultProps: { margin: "dense", size: "small" },
     },
     MuiSelect: {
-      defaultProps: {
-        margin: "dense",
-        size: "small",
-      },
+      defaultProps: { margin: "dense", size: "small" },
     },
     MuiInputLabel: {
       styleOverrides: {
-        root: {
-          fontSize: "0.75rem",
-        },
+        root: { fontSize: "0.75rem" },
       },
     },
     MuiInputBase: {
       styleOverrides: {
-        root: {
-          fontSize: "0.75rem",
-        },
+        root: { fontSize: "0.75rem" },
       },
-    },    
-  },  
-  typography: {
-    fontSize: 12,
+    },
   },
+  typography: { fontSize: 12 },
 });
 
 type ProductListProps = {
