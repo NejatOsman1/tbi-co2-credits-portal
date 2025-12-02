@@ -77,7 +77,7 @@ const ExportProductenPdfButton: React.FC = () => {
     // Save
     doc.setFont('helvetica', 'normal');
     doc.text(`Voor de berekening worden de volgende aannames gehanteerd:`, 14, finalY + 15);
-    doc.text(`- Op basis van de ingevulde gegevens is er een schatting gemaakt van potentiële aantal CO2-credits`, 18, finalY + 20);
+    // doc.text(`- Op basis van de ingevulde gegevens is er een schatting gemaakt van potentiële aantal CO2-credits`, 18, finalY + 20);
     doc.text(`- Voor de HSB dakelementen wordt er uitgegaan van een dikte van 0,32m`, 18, finalY + 25);
     doc.text(`- Voor de HSB dakelementen wordt er uitgegaan van een oppervlakte van 9% van het totaal oppervlak`, 18, finalY + 30);
     doc.text(`- Voor de HSB binnenspouwblad wordt er uitgegaan van een dikte van 0,254m`, 18, finalY + 35);
