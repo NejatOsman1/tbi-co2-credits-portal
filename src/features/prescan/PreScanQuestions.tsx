@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { ListField, NestField, NumField, TextField, ListDelField } from "uniforms-mui";
 import { SelectField } from "uniforms-mui";
-import type { FormModel } from "@/forms/types";
+import type { FormModel } from "../../forms/types.js";
 import { bouwFasen, jaNeeMaybe, aantalm2, jaNee } from "./schema.js";
 
 export function PrescanQuestions({ model }: { model: FormModel }) {

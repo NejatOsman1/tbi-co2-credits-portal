@@ -76,6 +76,29 @@ export const ENTRIES: ProductEntry[] = [
   ...houtGeenEpd
 ];
 
+export type ProductGroup = {
+  type: string;
+  carbon: number;  
+}
+
+export const PRODUCTS : ProductGroup[] = [
+  {type: "Structural: Hout", carbon: 618},
+  {type: "Structural: CLT or LVL",carbon: 12},
+  {type: "Structural: Bamboo", carbon: 14},
+  {type: "Fibers: houtvezels", carbon: 198},
+  {type: "Fibers: stro", carbon:775},
+  {type: "Fibers: hemp or flax", carbon:34},
+  {type: "Composite: wood-based", carbon:34},
+  {type: "Composite: mycelium-based", carbon:34},
+  {type: "Composite: conrete based", carbon:34},
+] 
+
+
+export const getCarbonByType = (type: string): number | undefined => {
+  const item = PRODUCTS.find((p) => p.type === type);
+  return item?.carbon;
+};
+
 // Distinct manufacturers (sorted).
 export const manufacturers = Array.from(new Set(ENTRIES.map(e => e.manufacturer))).sort();
 

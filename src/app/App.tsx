@@ -9,6 +9,7 @@ import { steps } from "../config/steps";
 import type { FormModel } from "../forms/types";
 import { Sidebar } from "../components/layout/SideBar";
 import { PrescanQuestions } from "../features/prescan";
+import { PrescanQuestions2 } from "../features/prescan2";
 import { QuickScanFields } from "../features/quick-scan";
 import { Review } from "../features/review";
 import { productsByManufacturer } from "../data/productCatalog";
@@ -71,9 +72,12 @@ export default function App(): JSX.Element {
   const isFinalOverview = currentStep.key === "publiceer" && currentSub.key === "overzicht";
 
   const ContentFields =
-    currentSub.render === "prescanQuestions" ? (
-      <PrescanQuestions model={model} />
-    ) : currentSub.render === "quickProducts" ? (
+    currentSub.render === "prescanQuestions2" ? (
+      <PrescanQuestions2 model={model} />
+    ) : currentSub.render === "prescanQuestions" ? (
+       <PrescanQuestions model={model} /> 
+    )  
+     : currentSub.render === "quickProducts" ? (
       <QuickScanFields />
     ) : isFinalOverview ? (
       <Review model={model} />

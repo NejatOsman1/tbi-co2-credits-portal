@@ -2,6 +2,7 @@ import type { z } from "zod";
 import type { FormModel } from "../forms/types";
 
 import { prescanSchema } from "../features/prescan/schema";
+import { prescanSchema2 } from "../features/prescan2/schema2";
 import { requireAtLeastOneQuickItem } from "../features/quick-scan/schema";
 import {
   oncraResultSchema,
@@ -14,7 +15,7 @@ import {
 } from "../features/validation";
 
 export type FieldKey = keyof FormModel;
-export type RenderKey = "quickProducts" | "prescanQuestions";
+export type RenderKey = "quickProducts" | "prescanQuestions" | "prescanQuestions2";
 
 export type SubstepDef = {
   key: string;
@@ -32,6 +33,20 @@ export type StepDef = {
 };
 
 export const steps: StepDef[] = [
+    {
+    key: "prescan2",
+    label: "Prescan",
+    substeps: [
+      {
+        key: "prescan-main",
+        label: "Prescan",
+        description: "Beantwoord de prescan-vragen zodat we uw project beter kunnen inschatten.",
+        fields: ["prescanFase2", "prescanBio2", "structuralElements", "prescanLifeSpanProject2","prescanBinnenSpouwBlad","aantalm22"],
+        zod: prescanSchema2,
+        render: "prescanQuestions2",
+      },
+    ],
+  },
   {
     key: "prescan",
     label: "Prescan",
@@ -40,7 +55,7 @@ export const steps: StepDef[] = [
         key: "prescan-main",
         label: "Prescan",
         description: "Beantwoord de prescan-vragen zodat we uw project beter kunnen inschatten.",
-        fields: ["prescanFase", "prescanBio", "aantalm2"],
+        fields: ["prescanFase", "prescanBio", "aantalm2", "quickScan"],
         zod: prescanSchema,
         render: "prescanQuestions",
       },
