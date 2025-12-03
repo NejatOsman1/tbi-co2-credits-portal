@@ -20,7 +20,8 @@ export function computeCO2Equivalent(
     CO2Credits =
       (0.27 * aantal * getCarbonByType(productType)) * 0.18 / 1000;
   }
-  if (elements === "Binnenspouwblad" && productType === "Fibers: houtvezel") {
+  if (elements === "Binnenspouwblad" && productType === "Fibers: houtvezels") {
+    console.log(productType);
     CO2Credits = (0.27 * aantal * getCarbonByType(productType)) / 1000;
   }
 
