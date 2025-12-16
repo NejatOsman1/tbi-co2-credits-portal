@@ -17,7 +17,7 @@ import type { FormModel } from "../../forms/types.js";
 import { bouwFasen, jaNee, productTypes, elements } from "./schema2.js";
 import { getCarbonByType } from "../../data/productCatalog.js";
 import  ExportProductenPdfButton  from "../../utils/exportPDF.js"
-import { computeCO2Equivalent } from "../../utils/calculateCO2V2.js"
+import { computeCO2Equivalent, computeCO2Equivalent2 } from "../../utils/calculateCO2V2.js"
 // (other imports stay as they are)
 
 
@@ -59,67 +59,7 @@ export function PrescanQuestions2({ model }: { model: FormModel }) {
           name="structuralElements"
           label=""
         />
-
-      {/* <Box>
-        <SelectField
-          name="prescanLifeSpanProject2"
-          label="Heeft het project dakoppervlakte met biobased materialen?"
-          allowedValues={jaNee as unknown as string[]}
-          fullWidth
-        />
-      </Box>
-      {model?.prescanLifeSpanProject2 === "Ja" && (
-        <ProductList
-          name="dakelementen"
-          label="Welke biobased materialen worden toegepast op het dak?"
-        />
-      )}
-
-      <Box>
-        <SelectField
-          name="prescanBinnenSpouwBlad"
-          label="Heeft het project binnenspouwblad met biobased materialen?"
-          allowedValues={jaNee as unknown as string[]}
-          fullWidth
-        />
-      </Box>
-      {model?.prescanBinnenSpouwBlad === "Ja" && (
-        <ProductList
-          name="binnenSpouwblad"
-          label="Welke biobased materialen worden toegepast in het binnenspouwblad?"
-        />
-      )}
-Automatic testing: add pipeliine with sql script
-      <Box>
-        <SelectField
-          name="prescanBinnenWanden"
-          label="Heeft het project een binnenwanden met biobased materialen?"
-          allowedValues={jaNee as unknown as string[]}
-          fullWidth
-        />
-      </Box>
-      {model?.prescanBinnenWanden === "Ja" && (
-        <ProductList
-          name="binnenWanden"
-          label="Welke biobased materialen worden toegepast in de binnenwanden?"
-        />
-      )}
-
-      <Box>
-        <SelectField
-          name="prescanVloeren"
-          label="Heeft het project vloerelementen met biobased materialen?"
-          allowedValues={jaNee as unknown as string[]}
-          fullWidth
-        />
-      </Box>
-      {model?.prescanVloeren === "Ja" && (
-        <ProductList
-          name="vloeren"
-          label="Welke biobased materialen worden toegepast in de vloeren?"
-        />
-      )} */}
-      
+    
       <ExportProductenPdfButton />
 
       {(model?.prescanBio2 === "Ja" || model?.prescanBio2 === "Weet ik nog niet") && model?.aantalm22 > 100 ? (
@@ -176,20 +116,8 @@ const ProductList: React.FC<ProductListProps> = ({ name, label }) => (
   
   <ThemeProvider theme={smallFormTheme}>
     <Box sx={{ mb: 1 }}>
-      <Box>
-      {/* <TextField
-        // component="legend"
-        // sx={{
-        //   fontSize: "1rem",      // make this as big as you wan
-        //   mb: 0.5,
-        // }}
-      >
-        {label ?? "Welke biobased materialen worden toegepast?"}
-      </TextField>  */}
 
-      </Box>
-
-     <ListField
+    <ListField
       label="Klik op het plusteken om per element de hoeveelheid biobased materialen toe te voegen"
       name={name}
     >
@@ -205,20 +133,18 @@ const ProductList: React.FC<ProductListProps> = ({ name, label }) => (
           <SelectField
             name="elements"
             label="Element"
-            allowedValues={productTypes as unknown as string[]}
             fullWidth
           />
-                    <NumField
+          <NumField
             name="aantal"
             label="Oppervlakte element (m2)"
             decimal={false}
             fullWidth
           />
-
+          
           <SelectField
             name="productType"
             label="Biobased product"
-            allowedValues={productTypes as unknown as string[]}
             fullWidth
           />
 
@@ -231,6 +157,7 @@ const ProductList: React.FC<ProductListProps> = ({ name, label }) => (
     </Box>
   </ThemeProvider>
 );
+
 
 
 

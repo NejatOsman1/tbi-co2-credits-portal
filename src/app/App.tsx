@@ -8,7 +8,6 @@ import { bridge } from "../forms/bridge";
 import { steps } from "../config/steps";
 import type { FormModel } from "../forms/types";
 import { Sidebar } from "../components/layout/SideBar";
-import { PrescanQuestions } from "../features/prescan";
 import { PrescanQuestions2 } from "../features/prescan2";
 import { QuickScanFields } from "../features/quick-scan";
 import { Review } from "../features/review";
@@ -74,10 +73,7 @@ export default function App(): JSX.Element {
   const ContentFields =
     currentSub.render === "prescanQuestions2" ? (
       <PrescanQuestions2 model={model} />
-    ) : currentSub.render === "prescanQuestions" ? (
-       <PrescanQuestions model={model} /> 
-    )  
-     : currentSub.render === "quickProducts" ? (
+    ) : currentSub.render === "quickProducts" ? (
       <QuickScanFields />
     ) : isFinalOverview ? (
       <Review model={model} />

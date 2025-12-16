@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { prescanSchema } from "../features/prescan/schema";
+
 import { prescanSchema2 } from "../features/prescan2/schema2";
 import { quickScanRow } from "../features/quick-scan/schema";
 import {
@@ -14,11 +14,7 @@ import {
 
 // Compose the full shape from partial schemas
 export const FullSchema = z.object({
-  prescanFase: prescanSchema.shape.prescanFase.optional(),
-  prescanBio: prescanSchema.shape.prescanBio.optional(),
-  preScanLifeSpanProject: prescanSchema.shape.preScanLifeSpanProject,
-  prescanFinishTimeProject: prescanSchema.shape.prescanFinishTimeProject,
-  aantalm2: prescanSchema.shape.aantalm2.optional(),
+
 
   prescanFase2: prescanSchema2.shape.prescanFase2.optional(),
   // preScanLifeSpanProject2: prescanSchema2.shape.preScanLifeSpanProject2,

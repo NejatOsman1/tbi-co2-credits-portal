@@ -6,15 +6,16 @@ export const jaNee = ["Ja", "Nee"] as const;
 export const aantalm2 = ["Minder dan 100 m2", "Meer dan 100 m2"] as const;
 
 export const productTypes = [
-  "Structural: Hout",
-  "Structural: CLT or LVL",
-  "Structural: Bamboo",
-  "Fibers: houtvezels",
-  "Fibers: stro",
-  "Fibers: hemp or flax",
-  "Composite: wood-based",
-  "Composite: mycelium-based",
-  "Composite: conrete based",
+  "Constructie: Hout",
+  "Constructie: Spaanplaat",
+  "Constructie: CLT or LVL",
+  "Constructie: Bamboo",
+  "Isolatie: houtvezels",
+  "Isolatie: stro",
+  "Isolatie: hemp or flax",
+  "Composiet: wood-based",
+  "Composiet: mycelium-based",
+  "Composiet: conrete based",
 ] as const;
 
 export const elements = [

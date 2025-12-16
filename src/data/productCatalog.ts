@@ -82,15 +82,16 @@ export type ProductGroup = {
 }
 
 export const PRODUCTS : ProductGroup[] = [
-  {type: "Structural: Hout", carbon: 618},
-  {type: "Structural: CLT or LVL",carbon: 12},
-  {type: "Structural: Bamboo", carbon: 14},
-  {type: "Fibers: houtvezels", carbon: 198},
-  {type: "Fibers: stro", carbon:775},
-  {type: "Fibers: hemp or flax", carbon:34},
-  {type: "Composite: wood-based", carbon:34},
-  {type: "Composite: mycelium-based", carbon:34},
-  {type: "Composite: conrete based", carbon:34},
+  {type: "Constructie: Hout", carbon: 618},
+  {type: "Constructie: CLT or LVL",carbon: 12},
+  {type: "Constructie: Bamboo", carbon: 14},
+  {type: "Constructie: Spaanplaat", carbon: 1051},
+  {type: "Isolatie: houtvezels", carbon: 198},
+  {type: "Isolatie: stro", carbon:775},
+  {type: "Isolatie: hemp or flax", carbon:34},
+  {type: "Composiet: wood-based", carbon:34},
+  {type: "Composiet: mycelium-based", carbon:34},
+  {type: "Composiet: conrete based", carbon:34},
 ] 
 
 

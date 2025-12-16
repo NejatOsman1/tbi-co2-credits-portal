@@ -1,7 +1,5 @@
 import type { z } from "zod";
 import type { FormModel } from "../forms/types";
-
-import { prescanSchema } from "../features/prescan/schema";
 import { prescanSchema2 } from "../features/prescan2/schema2";
 import { requireAtLeastOneQuickItem } from "../features/quick-scan/schema";
 import {
@@ -35,11 +33,11 @@ export type StepDef = {
 export const steps: StepDef[] = [
     {
     key: "prescan2",
-    label: "Prescan",
+    label: "Quickscan",
     substeps: [
       {
         key: "prescan-main",
-        label: "Prescan",
+        label: "Quickscan",
         description: "Beantwoord de prescan-vragen zodat we een inschatting kunnen maken voor de CO2 opslag potentie van uw project.",
         fields: ["prescanFase2", "prescanBio2", "structuralElements", "prescanLifeSpanProject2","prescanBinnenSpouwBlad","aantalm22"],
         zod: prescanSchema2,
@@ -48,22 +46,8 @@ export const steps: StepDef[] = [
     ],
   },
   {
-    key: "prescan",
-    label: "Prescan",
-    substeps: [
-      {
-        key: "prescan-main",
-        label: "Prescan",
-        description: "Beantwoord de prescan-vragen zodat we uw project beter kunnen inschatten.",
-        fields: ["prescanFase", "prescanBio", "aantalm2", "quickScan"],
-        zod: prescanSchema,
-        render: "prescanQuestions",
-      },
-    ],
-  },
-  {
     key: "quick",
-    label: "Quick scan",
+    label: "Oncra input",
     substeps: [
       {
         key: "product-materialen",
