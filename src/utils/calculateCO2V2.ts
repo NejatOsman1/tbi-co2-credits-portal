@@ -29,7 +29,7 @@ export function computeCO2Equivalent(
     CO2Credits = (0.27 * aantal * getCarbonByType(productType)) / 1000;
     console.log(CO2Credits);
   }
-  if (elements === "Dak" && productType === "Constructie: Spaanplaat") {
+  if (elements === "Binnenspouwblad" && productType === "Constructie: Spaanplaat") {
     CO2Credits =
       (0.018 * aantal * getCarbonByType(productType)) / 1000;
   }
