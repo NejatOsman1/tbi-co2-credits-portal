@@ -13,7 +13,7 @@ import {
 } from "../features/validation";
 
 export type FieldKey = keyof FormModel;
-export type RenderKey = "quickProducts" | "prescanQuestions" | "prescanQuestions2";
+export type RenderKey = "quickProducts" | "prescanQuestions" | "prescanQuestions2" | "intro";
 
 export type SubstepDef = {
   key: string;
@@ -31,6 +31,20 @@ export type StepDef = {
 };
 
 export const steps: StepDef[] = [
+    {
+      key: "intro",
+      label: "Introductie",
+      substeps: [
+        {
+          key: "welkom",
+          label: "Welkom",
+          description: "Korte uitleg voordat je start.",          
+          fields: [],
+          zod: null, // I recommend explicitly setting this
+          render: "intro"
+        },
+      ],
+    },
     {
     key: "prescan2",
     label: "Quickscan",

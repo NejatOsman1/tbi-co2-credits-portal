@@ -8,7 +8,7 @@ import {
   ListAddField,
   SelectField,
 } from "uniforms-mui";
-
+import { Tooltip } from "@mui/material";
 import React, { useEffect, useMemo } from "react";
 import { useField } from "uniforms";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -135,12 +135,20 @@ const ProductList: React.FC<ProductListProps> = ({ name, label }) => (
             label="Element"
             fullWidth
           />
-          <NumField
-            name="aantal"
-            label="Oppervlakte element (m2)"
-            decimal={false}
-            fullWidth
-          />
+        <Tooltip
+          title="Vul hier de oppervlakte van dit specifieke element in vierkante meters in."
+          arrow
+          placement="top"
+        >
+          <Box>
+            <NumField
+              name="aantal"
+              label="Oppervlakte element (m2)"
+              decimal={false}
+              fullWidth
+            />
+          </Box>
+        </Tooltip>
           
           <SelectField
             name="productType"
