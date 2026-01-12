@@ -36,15 +36,21 @@ export function PrescanQuestions2({ model }: { model: FormModel }) {
           fullWidth
         />
       </Box>
+      <Tooltip
+        title="Vloeroppervlakte wordt gebruikt in de export pdf en geeft een eerste indicatie van het CO₂ potentieel."
+        arrow
+        placement="top"
+      >
+        <Box>
+          <NumField
+            name="aantalm22"
+            label="Wat is de omvang van het project in vloeroppervlak (m²)?"
+            decimal={false}
+            fullWidth
+          />
+        </Box>
+      </Tooltip>
 
-      <Box>
-        <NumField
-          name="aantalm22"
-          label="Wat is de omvang van het project in vloeroppervlak (m²)?"
-          decimal={false}
-          fullWidth
-        />
-      </Box>
       <TextField
           label="Welke biobased materialen worden toegepast?"
           name=""
@@ -136,7 +142,7 @@ const ProductList: React.FC<ProductListProps> = ({ name, label }) => (
             fullWidth
           />
         <Tooltip
-          title="Vul hier de oppervlakte van dit specifieke element in vierkante meters in."
+          title="Vul hier de oppervlakte van dit specifieke element in vierkante meters in. Aan de hand van deze wordt er berekend hoeveel biobased materiaal er nodig is voor het desbetreffende element."
           arrow
           placement="top"
         >

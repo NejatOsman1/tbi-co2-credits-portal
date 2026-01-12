@@ -34,7 +34,7 @@ export function Intro({ onStart }: { onStart: () => void }) {
             color="text.secondary"
             sx={{ ml: 1, mt: 0.5 }}
           >
-            Gecertificeerde CO₂-vastlegging versterkt aanbestedingen, rapportages
+            Gecertificeerde CO₂-vastlegging versterkt aanbestedingen, business cases en rapportages
             en externe verantwoording.
           </Typography>
         </Box>
