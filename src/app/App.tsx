@@ -9,6 +9,7 @@ import { steps } from "../config/steps";
 import type { FormModel } from "../forms/types";
 import { Sidebar } from "../components/layout/SideBar";
 import { Intro } from "../features/intro/Intro";
+import { IntroHow } from "../features/intro/Intro-how";
 import { PrescanQuestions2 } from "../features/prescan2";
 import { QuickScanFields } from "../features/quick-scan";
 import { Review } from "../features/review";
@@ -72,8 +73,10 @@ export default function App(): JSX.Element {
   const isFinalOverview = currentStep.key === "publiceer" && currentSub.key === "overzicht";
 
   const ContentFields =
-    currentSub.render === "intro" ? (
+    currentSub.render === "intro-waarom" ? (
       <Intro />
+    ) : currentSub.render === "intro-hoe" ? (
+      <IntroHow />
     ) : currentSub.render === "prescanQuestions2" ? (
       <PrescanQuestions2 model={model} />
     ) : currentSub.render === "quickProducts" ? (
