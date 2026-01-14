@@ -49,7 +49,7 @@ export function IntroHow({ onStart }: { onStart: () => void }) {
       color="text.secondary"
       sx={{ ml: 1, mt: 0.5 }}
     >
-      Van schetsontwerp tot voorlopig ontwerp. Materiaalkeuzes worden verder
+      Vanaf voorlopig ontwerp. Materiaalkeuzes worden verder
       uitgewerkt en het aantal CO₂-credits wordt nauwkeurig berekend als input
       voor Oncra.
     </Typography>
@@ -78,7 +78,7 @@ export function IntroHow({ onStart }: { onStart: () => void }) {
       color="text.secondary"
       sx={{ ml: 1, mt: 0.5 }}
     >
-      Na validatie. Gecertificeerde CO₂-credits kunnen worden gepubliceerd en,
+      Na start van bouw. Gecertificeerde CO₂-credits kunnen worden gepubliceerd en,
       indien gewenst, aangeboden voor verkoop.
     </Typography>
   </Box>
