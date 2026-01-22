@@ -8,7 +8,7 @@ import {
   ListAddField,
   SelectField,
 } from "uniforms-mui";
-import { Tooltip } from "@mui/material";
+import { Tooltip, Paper, FormControl, InputLabel, FormHelperText} from "@mui/material";
 import React, { useEffect, useMemo } from "react";
 import { useField } from "uniforms";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -44,28 +44,33 @@ export function PrescanQuestions2({ model }: { model: FormModel }) {
         <Box>
           <NumField
             name="aantalm22"
-            label="Wat is de omvang van het project in vloeroppervlak (m²)?"
+            label="Wat is de omvang van het project in bruto vloeroppervlakte (m²)?"
             decimal={false}
             fullWidth
           />
         </Box>
       </Tooltip>
 
-      <TextField
-          label="Welke biobased materialen worden toegepast?"
-          name=""
-          fullWidth
-            InputProps={{
-          readOnly: true,
-          disabled: true,
+    <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 2 }}>
+      <FormControl fullWidth margin="dense" variant="standard">
+        <InputLabel
+          shrink
+          sx={{
+            position: "static",
+            transform: "none",
+            mb: 0,
           }}
-          value=""
-      />
-      <ProductList
-          name="structuralElements"
-          label=""
-        />
-    
+        >
+          Welke biobased materialen worden toegepast?
+        </InputLabel>
+        <FormHelperText sx={{ mt: 0, mb: 0 }}>
+          Klik op het plusteken om per element de hoeveelheid biobased materialen toe te voegen.
+        </FormHelperText>
+      </FormControl>
+
+      <ProductList name="structuralElements" label="" />
+    </Paper>
+              
       <ExportProductenPdfButton />
 
       {(model?.prescanBio2 === "Ja" || model?.prescanBio2 === "Weet ik nog niet") && model?.aantalm22 > 100 ? (
@@ -118,59 +123,57 @@ type ProductListProps = {
   label?: string;
 };
 
-const ProductList: React.FC<ProductListProps> = ({ name, label }) => (
-  
+const ProductList: React.FC<ProductListProps> = ({ name }) => (
   <ThemeProvider theme={smallFormTheme}>
-    <Box sx={{ mb: 1 }}>
+    <Box sx={{ mb: 0 }}>
+      <ListField
+        name={name}
+        label=""
+        sx={{
+          "& .MuiList-root": {
+            paddingTop: 0,
+            paddingBottom: 0,
+          },
+        }}
+      >
+        <NestField name="$" label="">
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "1fr",
+                sm: "1fr 1fr 1fr 1fr auto",
+              },
+              gap: 1,
+              alignItems: "center",
+            }}
+          >
+            <SelectField name="elements" label="Element" fullWidth />
 
-    <ListField
-      label="Klik op het plusteken om per element de hoeveelheid biobased materialen toe te voegen"
-      name={name}
-    >
-      <NestField name="$">
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr 1fr 1fr auto" },
-            gap: 1,
-            alignItems: "center",
-          }}
-        >
-          <SelectField
-            name="elements"
-            label="Element"
-            fullWidth
-          />
-        <Tooltip
-          title="Vul hier de oppervlakte van dit specifieke element in vierkante meters in. Aan de hand van deze wordt er berekend hoeveel biobased materiaal er nodig is voor het desbetreffende element."
-          arrow
-          placement="top"
-        >
-          <Box>
-            <NumField
-              name="aantal"
-              label="Oppervlakte element (m2)"
-              decimal={false}
-              fullWidth
-            />
+            <Tooltip
+              title="Vul hier de oppervlakte van dit specifieke element in vierkante meters in."
+              arrow
+            >
+              <Box>
+                <NumField
+                  name="aantal"
+                  label="Oppervlakte element (m2)"
+                  decimal={false}
+                  fullWidth
+                />
+              </Box>
+            </Tooltip>
+
+            <SelectField name="productType" label="Biobased product" fullWidth />
+            <CalculatedEenheidField />
+            <ListDelField />
           </Box>
-        </Tooltip>
-          
-          <SelectField
-            name="productType"
-            label="Biobased product"
-            fullWidth
-          />
-
-          <CalculatedEenheidField />
-          <ListDelField />
-        </Box>
-      </NestField>
-    </ListField> 
-
+        </NestField>
+      </ListField>
     </Box>
   </ThemeProvider>
 );
+
 
 
 
@@ -188,7 +191,7 @@ const CalculatedEenheidField: React.FC = () => {
 
   return (
     <TextField     
-      label="CO2 equivalent"
+      label="CO₂ equivalent (Ton CO₂ opslag)"
       name="eenheid"
       value={computedValue}
       disabled

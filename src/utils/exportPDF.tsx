@@ -13,7 +13,6 @@ import { useForm } from "uniforms";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { computeCO2Equivalent } from "./calculateCO2V2.js";
-import { CurrencyBitcoin } from "@mui/icons-material";
 
 type PdfMeta = {
   name: string;
@@ -21,20 +20,64 @@ type PdfMeta = {
   projectNumber: string;
 };
 
+const COLORS = {
+  brandDark: [0, 102, 153] as const, // dark blue
+  brandLight: [232, 243, 249] as const, // light blue banner
+  textDark: [20, 40, 55] as const,
+  grid: [210, 220, 230] as const,
+  boxBg: [245, 248, 251] as const,
+  helper: [90, 110, 125] as const,
+};
+
+function formatNl(value: any, digits = 2): string {
+  if (value === "Onbekend") return "Onbekend";
+  const n = Number(value);
+  if (!Number.isFinite(n)) return "Onbekend";
+  return n.toLocaleString("nl-NL", {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  });
+}
+
+function drawKpiCard(
+  doc: jsPDF,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  label: string,
+  value: string
+) {
+  doc.setDrawColor(...COLORS.grid);
+  doc.setFillColor(...COLORS.boxBg);
+  doc.roundedRect(x, y, w, h, 2, 2, "FD");
+
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(...COLORS.helper);
+  doc.setFontSize(9);
+  doc.text(label, x + 6, y + 7.5);
+
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...COLORS.textDark);
+  doc.setFontSize(18);
+  doc.text(value, x + 6, y + 18.5);
+}
+
+function splitTwoColumns(items: string[]) {
+  const half = Math.ceil(items.length / 2);
+  return [items.slice(0, half), items.slice(half)];
+}
+
 const ExportProductenPdfButton: React.FC = () => {
   const { model } = useForm<any>();
 
-  // Dialog state
   const [open, setOpen] = useState(false);
-
-  // Form state for dialog inputs
   const [meta, setMeta] = useState<PdfMeta>({
     name: "",
     projectName: "",
     projectNumber: "",
   });
 
-  // Simple validation
   const errors = useMemo(() => {
     const e: Partial<Record<keyof PdfMeta, string>> = {};
     if (!meta.name.trim()) e.name = "Naam is verplicht";
@@ -50,122 +93,226 @@ const ExportProductenPdfButton: React.FC = () => {
 
   const generatePdf = (pdfMeta: PdfMeta) => {
     const producten = model.structuralElements || [];
-    const totaalOppervlakteRaw = model.aantalm22;
     const bouwFase = model.prescanFase2 || "Onbekend";
-    const date = new Date().toLocaleDateString();
+
+    const totaalOppervlakteRaw = model.aantalm22;
     const totaalOppervlakte =
-      totaalOppervlakteRaw === undefined || totaalOppervlakteRaw === null || totaalOppervlakteRaw === ""
+      totaalOppervlakteRaw === undefined ||
+      totaalOppervlakteRaw === null ||
+      totaalOppervlakteRaw === ""
         ? "Onbekend"
         : totaalOppervlakteRaw;
 
+    const date = new Date().toLocaleDateString("nl-NL");
+
+    // First pass: table rows + total credits
     let totaalCO2credits = 0;
-    const doc = new jsPDF();
 
-    // Title
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(99, 13, 128);
-    doc.text("Overzicht CO2 opslag potentie", 14, 20);
-
-    // Header meta block
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    
-
-    doc.text(`Naam: ${pdfMeta.name}`, 14, 30);
-    doc.text(`Projectnaam: ${pdfMeta.projectName}`, 14, 35);
-    doc.text(`Projectnummer: ${pdfMeta.projectNumber}`, 14, 40);
-    doc.text(`Datum: ${date}`, 14, 45);
-
-    doc.text(`Fase bouwproject: ${bouwFase}`, 14, 50);
-    doc.text(`Totaal vloeroppervlakte project: ${totaalOppervlakte} m²`, 14, 55);
-
-    if (!producten.length) {
-      doc.setFontSize(12);
-      doc.text("Geen materialen ingevuld.", 14, 70);
-      doc.save("biobased-materialen.pdf");
-      return;
-    }
-
-    // Prepare table data
     const tableData = producten.map((item: any, index: number) => {
-      const eenheid = item.eenheid ?? computeCO2Equivalent(item.elements, item.productType, item.aantal);
-      if (eenheid !== undefined && eenheid !== null && eenheid !== "") {
-        const n = Number(eenheid);
-        if (!Number.isNaN(n)) totaalCO2credits += n;
-      }
+      const eenheid =
+        item.eenheid ?? computeCO2Equivalent(item.elements, item.productType, item.aantal);
+
+      const n = Number(eenheid);
+      if (Number.isFinite(n)) totaalCO2credits += n;
 
       return [
-        index + 1,
+        String(index + 1),
         item.elements || "-",
         item.aantal ?? "-",
         item.productType || "-",
-        eenheid === "" ? "" : eenheid,
+        Number.isFinite(n) ? n : (eenheid ?? ""),
       ];
-    });    
+    });
 
     const totaalOppervlakteNum = Number(totaalOppervlakte);
     const CO2Creditsperm2 =
       Number.isFinite(totaalOppervlakteNum) && totaalOppervlakteNum > 0
-        ? ((totaalCO2credits / totaalOppervlakteNum) * 1000).toFixed(2)
+        ? (totaalCO2credits / totaalOppervlakteNum) * 1000
         : "Onbekend";
 
-    // Table
+    const doc = new jsPDF({ unit: "mm", format: "a4" });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const marginX = 14;
+
+    // --- Header banner ---
+    doc.setFillColor(...COLORS.brandLight);
+    doc.rect(0, 0, pageW, 28, "F");
+
+    doc.setFillColor(...COLORS.brandDark);
+    doc.rect(0, 0, 8, 28, "F");
+
+    doc.setTextColor(...COLORS.textDark);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.text("Overzicht CO2 opslag potentie", marginX, 16);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(...COLORS.helper);
+    doc.text("CO2 Credits Quickscan", marginX, 22);
+
+    // --- Meta grid ---
+    const metaRows = [
+      ["Naam", pdfMeta.name || "-", "Datum", date],
+      ["Projectnaam", pdfMeta.projectName || "-", "Fase", bouwFase || "-"],
+      [
+        "Projectnummer",
+        pdfMeta.projectNumber || "-",
+        "Vloeroppervlakte",
+        `${totaalOppervlakte} m²`,
+      ],
+    ];
+
     autoTable(doc, {
-      head: [["", "Element", "Oppervlakte element", "Biobased materiaal", "CO2 credits"]],
-      body: tableData,
-      startY: 65,
+      startY: 34,
       theme: "grid",
-      styles: { fontSize: 10 },
-      headStyles: { fillColor: [99, 13, 128], textColor: 255 },
-      columnStyles: {
-        0: { cellWidth: 12 },
-        1: { cellWidth: 40 },
-        2: { cellWidth: 40 },
-        3: { cellWidth: 40 },
-        4: { cellWidth: 40 },
+      margin: { left: marginX, right: marginX },
+      tableWidth: pageW - marginX * 2,
+      body: metaRows,
+      styles: {
+        fontSize: 9,
+        cellPadding: 2.2,
+        lineColor: COLORS.grid as any,
+        lineWidth: 0.2,
+        textColor: COLORS.textDark as any,
       },
-      margin: { top: 40, left: 14, right: 14 },
+      columnStyles: {
+        0: { cellWidth: 28, fontStyle: "bold", textColor: COLORS.helper as any },
+        1: { cellWidth: 54 },
+        2: { cellWidth: 34, fontStyle: "bold", textColor: COLORS.helper as any },
+        3: { cellWidth: 40 },
+      },
     });
 
-    const finalY = (doc as any).lastAutoTable?.finalY ?? 65;
+    const afterMetaY = (doc as any).lastAutoTable?.finalY ?? 52;
 
-    let newline = finalY
-    function getNextline(lineOffset: number): number {
-      newline += lineOffset
-      return newline;
+    // --- KPI cards ---
+    const kpiY = afterMetaY + 6;
+    const kpiW = (pageW - marginX * 2 - 8) / 2;
+    drawKpiCard(doc, marginX, kpiY, kpiW, 22, "Totaal CO2 credits", formatNl(totaalCO2credits, 0));
+    drawKpiCard(
+      doc,
+      marginX + kpiW + 8,
+      kpiY,
+      kpiW,
+      22,
+      "Kg CO2 opslag per m² BVO",
+      formatNl(CO2Creditsperm2, 2)
+    );
+
+    // If nothing filled
+    if (!producten.length) {
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
+      doc.setTextColor(...COLORS.textDark);
+      doc.text("Geen materialen ingevuld.", marginX, kpiY + 34);
+      doc.save("biobased-materialen.pdf");
+      return;
     }
 
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    doc.text("Voor de berekening worden de volgende aannames gehanteerd:", 14, getNextline(15));
-    doc.text("- Voor de HSB dakelementen wordt er uitgegaan van een dikte van 0,32m", 18, getNextline(10));
-    doc.text("- Voor de HSB dakelementen wordt er uitgegaan van een oppervlakte van 9% van het totaal oppervlak", 18, getNextline(5));
-    doc.text("- Voor de HSB binnenspouwblad wordt er uitgegaan van een dikte van 0,0254m", 18, getNextline(5));
-    doc.text("- Voor de HSB binnenspouwblad wordt er uitgegaan van oppervlakte van 18% van het totaal oppervlak", 18, getNextline(5));
-    doc.text("- Voor het binnenspouwblad wordt er uitgegaan van OSB-plaat van 18mm", 18, getNextline(5));
-    doc.text("- Voor het dak wordt er uitgegaan van binnen spaanplaat van 18mm en buiten spaanplaat van 11mm", 18, getNextline(5));
+    // --- Main table ---
+    const tableStartY = kpiY + 30;
 
-    
-    doc.text("- Voor het HSB wordt er uitgegaan van naaldhout biogeen CO2 opslag van 618 kg CO2/m3", 18, getNextline(5));
-    //  doc.setFontSize(6);
-    //  doc.text("1", 20, getNextline(0));
-     doc.setFontSize(11);
-    doc.text("- Voor het dak wordt er uitgegaan van bioblow stro met biogeen CO2 opslag van 775 kg CO2/m3", 18, getNextline(5));
-    doc.text("- Voor de muren wordt er uitgegaan van GUTEX Thermoflex met biogeen CO2 opslag van 198 kg CO2/m3", 18, getNextline(5));
-    doc.text("- Voor de spaanplaten wordt er uitgegaan van Unilin spaanplaten met biogeen CO2 opslag van", 18, getNextline(5));
-    doc.text("1051.7 kg CO2/m3", 20, getNextline(5));
-    doc.text("- Aantal CO2 credits wordt berekened oppervlakte element * dikte * biogeen CO2 opslag toegepast product", 18, getNextline(5));
+    autoTable(doc, {
+      startY: tableStartY,
+      margin: { left: marginX, right: marginX },
+      head: [["Nr.", "Element", "Oppervlakte", "Biobased materiaal", "CO2 credits"]],
+      body: tableData.map((r) => [
+        r[0],
+        r[1],
+        r[2] === "-" ? "-" : `${r[2]} m²`,
+        r[3],
+        typeof r[4] === "number" ? formatNl(r[4], 0) : (r[4] ?? ""),
+      ]),
+      theme: "grid",
+      styles: {
+        fontSize: 9,
+        cellPadding: 2.2,
+        lineColor: COLORS.grid as any,
+        lineWidth: 0.2,
+        textColor: COLORS.textDark as any,
+      },
+      headStyles: {
+        fillColor: COLORS.brandDark as any,
+        textColor: 255,
+        fontStyle: "bold",
+      },
+      columnStyles: {
+        0: { cellWidth: 10, halign: "center" },
+        1: { cellWidth: 45 },
+        2: { cellWidth: 26, halign: "right" },
+        3: { cellWidth: 60 },
+        4: { cellWidth: 20, halign: "right" },
+      },
+    });
+
+    let y = ((doc as any).lastAutoTable?.finalY ?? tableStartY) + 8;
+
+    // --- Assumptions (boxed 2 columns) ---
+    const aannames = [
+      "Voor de HSB dakelementen wordt er uitgegaan van een dikte van 0,32 m.",
+      "Voor de HSB dakelementen wordt er uitgegaan van een oppervlakte van 9% van het totaal oppervlak.",
+      "Voor de HSB binnenspouwblad wordt er uitgegaan van een dikte van 0,0254 m.",
+      "Voor de HSB binnenspouwblad wordt er uitgegaan van oppervlakte van 18% van het totaal oppervlak.",
+      "Voor het binnenspouwblad wordt er uitgegaan van OSB-plaat van 18 mm.",
+      "Voor het dak wordt er uitgegaan van binnen spaanplaat van 18 mm en buiten spaanplaat van 11 mm.",
+      "Voor het HSB wordt er uitgegaan van naaldhout biogene CO2 opslag van 618 kg CO2/m³.",
+      "Voor het dak wordt er uitgegaan van bioblow stro biogene CO2 opslag van 775 kg CO2/m³.",
+      "Voor de muren wordt er uitgegaan van GUTEX Thermoflex biogene CO2 opslag van 198 kg CO2/m³.",
+      "Voor de spaanplaten wordt er uitgegaan van Unilin spaanplaten biogene CO2 opslag van 1051,7 kg CO2/m³.",
+      "Aantal CO2 credits wordt berekend als: oppervlakte element × dikte × biogene CO2 opslag toegepast product.",
+    ];
+
+    // Keep assumptions from going beyond page
+    const minSpaceNeeded = 55;
+    if (y + minSpaceNeeded > pageH - 16) {
+      doc.addPage();
+      y = 18;
+    }
 
     doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(...COLORS.textDark);
+    doc.text("Aannames voor de berekening", marginX, y);
+    y += 3;
 
+    const [left, right] = splitTwoColumns(aannames);
+    const leftText = left.map((s) => `• ${s}`).join("\n");
+    const rightText = right.map((s) => `• ${s}`).join("\n");
 
-    doc.text(`Totaal aantal CO2 credits: ${totaalCO2credits}`, 14, getNextline(15));
-    doc.text(`Kg CO2 opslag per m² BVO : ${CO2Creditsperm2}`, 14, getNextline(5));
-// https://unilin.showpad.com/share/fSnQZUVXs10cC0z5ZXFk5
-// https://www.mrpi.nl/epd-files/epd/1.1.00756.2025%20PDF_Template_V9_NL.ondertekend%20FvdB%20en%20LO.pdf
-// hout
+    autoTable(doc, {
+      startY: y,
+      margin: { left: marginX, right: marginX },
+      theme: "grid",
+      body: [[leftText, rightText]],
+      styles: {
+        fontSize: 8.5,
+        cellPadding: 4,
+        valign: "top",
+        fillColor: COLORS.boxBg as any,
+        lineColor: COLORS.grid as any,
+        lineWidth: 0.2,
+        textColor: COLORS.textDark as any,
+      },
+      columnStyles: {
+        0: { cellWidth: (pageW - marginX * 2) / 2 },
+        1: { cellWidth: (pageW - marginX * 2) / 2 },
+      },
+    });
+
+    // --- Footer ---
+    const footerY = pageH - 10;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(120, 135, 150);
+
+    const leftFooter = `${pdfMeta.projectNumber || "-"}  |  ${pdfMeta.projectName || "-"}`;
+    doc.text(leftFooter, marginX, footerY);
+
+    const pageLabel = `Pagina 1`;
+    doc.text(pageLabel, pageW - marginX - doc.getTextWidth(pageLabel), footerY);
+
     doc.save("biobased-materialen.pdf");
   };
 
@@ -193,7 +340,6 @@ const ExportProductenPdfButton: React.FC = () => {
               label="Naam"
               value={meta.name}
               onChange={(e) => setMeta((m) => ({ ...m, name: e.target.value }))}
-              // error={!!errors.name}
               helperText={errors.name}
               autoFocus
               fullWidth
@@ -202,7 +348,6 @@ const ExportProductenPdfButton: React.FC = () => {
               label="Projectnaam"
               value={meta.projectName}
               onChange={(e) => setMeta((m) => ({ ...m, projectName: e.target.value }))}
-             // error={!!errors.projectName}
               helperText={errors.projectName}
               fullWidth
             />
@@ -210,7 +355,6 @@ const ExportProductenPdfButton: React.FC = () => {
               label="Projectnummer"
               value={meta.projectNumber}
               onChange={(e) => setMeta((m) => ({ ...m, projectNumber: e.target.value }))}
-              // error={!!errors.projectNumber}
               helperText={errors.projectNumber}
               fullWidth
             />

@@ -18,7 +18,7 @@ export function IntroHow({ onStart }: { onStart: () => void }) {
       <Typography variant="body1" color="text.secondary">
         Het is toepasbaar op zowel één individuele woning als op een volledig
         bouwproject. Afhankelijk van de gekozen invoer worden
-        de resultaten per woning of geaggregeerd op projectniveau weergegeven.
+        de resultaten per woning of op projectniveau weergegeven.
       </Typography>
 
       <Typography variant="body1" color="text.secondary">
