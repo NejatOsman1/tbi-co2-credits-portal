@@ -12,12 +12,13 @@ import { Tooltip, Paper, FormControl, InputLabel, FormHelperText} from "@mui/mat
 import React, { useEffect, useMemo } from "react";
 import { useField } from "uniforms";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { primaryColor } from "../../app/theme.js";
+import { smallFormTheme } from "../../app/theme.js";
 import type { FormModel } from "../../forms/types.js";
 import { bouwFasen, jaNee, productTypes, elements } from "./schema2.js";
 import { getCarbonByType } from "../../data/productCatalog.js";
 import  ExportProductenPdfButton  from "../../utils/exportPDF.js"
 import { computeCO2Equivalent, computeCO2Equivalent2 } from "../../utils/calculateCO2V2.js"
+
 // (other imports stay as they are)
 
 
@@ -90,33 +91,7 @@ export function PrescanQuestions2({ model }: { model: FormModel }) {
   );
 }
 
-const smallFormTheme = createTheme({
-  palette: {
-    primary: { main: primaryColor },
-  },
-  components: {
-    MuiFormControl: {
-      defaultProps: { margin: "dense" },
-    },
-    MuiTextField: {
-      defaultProps: { margin: "dense", size: "small" },
-    },
-    MuiSelect: {
-      defaultProps: { margin: "dense", size: "small" },
-    },
-    MuiInputLabel: {
-      styleOverrides: {
-        root: { fontSize: "0.75rem" },
-      },
-    },
-    MuiInputBase: {
-      styleOverrides: {
-        root: { fontSize: "0.75rem" },
-      },
-    },
-  },
-  typography: { fontSize: 12 },
-});
+
 
 type ProductListProps = {
   name: string;

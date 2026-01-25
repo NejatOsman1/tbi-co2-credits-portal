@@ -30,5 +30,34 @@ const theme = createTheme({
   },
 });
 
+  const smallFormTheme = createTheme({
+  palette: {
+    primary: { main: primaryColor },
+  },
+  components: {
+    MuiFormControl: {
+      defaultProps: { margin: "dense" },
+    },
+    MuiTextField: {
+      defaultProps: { margin: "dense", size: "small" },
+    },
+    MuiSelect: {
+      defaultProps: { margin: "dense", size: "small" },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: { fontSize: "0.75rem" },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: { fontSize: "0.75rem" },
+      },
+    },
+  },
+  typography: { fontSize: 12 },
+});
+
 export default theme;
-export { primaryColor, primaryHover, textColour };
+export { primaryColor, primaryHover, textColour, smallFormTheme };
+

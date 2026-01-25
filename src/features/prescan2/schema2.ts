@@ -30,10 +30,6 @@ const elementsEnum = z.enum(elements);
 
 export const prescanSchema2 = z.object({
   prescanFase2: z.enum(bouwFasen, { required_error: "Kies een fase" }),
-  // prescanLifeSpanProject2: z.enum(jaNee, { required_error: "Kies een optie" }),
-  // prescanBinnenSpouwBlad: z.enum(jaNee, { required_error: "Kies een optie" }),
-  // prescanBinnenWanden: z.enum(jaNee, { required_error: "Kies een optie" }),
-  // prescanVloeren: z.enum(jaNee, { required_error: "Kies een optie" }),
   aantalm22: z.number().optional(),
   structuralElements: z.array(z.object({
         elements: elementsEnum,
@@ -42,32 +38,5 @@ export const prescanSchema2 = z.object({
         eenheid: z.string().min(1, "Voer een eenheid in").optional(),
       })
     ).optional(),
-  // 👇 New list field
-  // dakelementen: z.array(z.object({
-  //       productType: productTypeEnum,
-  //       aantal: z.number().int().positive().optional(),
-  //       eenheid: z.string().min(1, "Voer een eenheid in").optional(),
-  //     })
-  //   ).optional(),
-  
-  // binnenSpouwblad: z.array(z.object({
-  //       productType: productTypeEnum,
-  //       aantal: z.number().int().positive().optional(),
-  //       eenheid: z.string().min(1, "Voer een eenheid in").optional(),
-  //     })
-  //   ).optional(), 
 
-  // binnenWanden: z.array(z.object({
-  //       productType: productTypeEnum,
-  //       aantal: z.number().int().positive().optional(),
-  //       eenheid: z.string().min(1, "Voer een eenheid in").optional(),
-  //     })
-  //   ).optional(),
-  
-  // vloeren: z.array(z.object({
-  //       productType: productTypeEnum,
-  //       aantal: z.number().int().positive().optional(),
-  //       eenheid: z.string().min(1, "Voer een eenheid in").optional(),
-  //     })
-  //   ).optional(),
 });

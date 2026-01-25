@@ -5,10 +5,11 @@ const isValidPair = (m?: string, p?: string) =>
   !!m && !!p && Array.isArray(productsByManufacturer[m]) && productsByManufacturer[m].includes(p as string);
 
 export const quickScanRow = z.object({
+  element: z.string().optional(), // prefilled, read-only,
   fabrikant: z.string().min(1, "Kies een fabrikant"),
   productCategory: z.string().min(1, "Kies een product"),
   aantal: z.number().positive({ message: "Voer een positief getal in" }),
-  eenheid: z.string().min(1, "Verplicht veld"),
+  eenheid: z.string().optional()
 });
 
 export const requireAtLeastOneQuickItem = z

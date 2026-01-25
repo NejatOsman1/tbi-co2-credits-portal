@@ -1,10 +1,8 @@
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useState, useMemo, useEffect } from "react";
 import { Box, Button, Container, Divider, Paper, Typography } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { AutoFields, AutoForm, ErrorsField } from "uniforms-mui";
-
 import theme from "./theme";
-import { bridge } from "../forms/bridge";
 import { steps } from "../config/steps";
 import type { FormModel } from "../forms/types";
 import { Sidebar } from "../components/layout/SideBar";
@@ -13,7 +11,6 @@ import { IntroHow } from "../features/intro/Intro-how";
 import { PrescanQuestions2 } from "../features/prescan2";
 import { QuickScanFields } from "../features/quick-scan";
 import { Review } from "../features/review";
-import { productsByManufacturer } from "../data/productCatalog";
 import { makeStepBridge } from "../forms/makeStepBridge";
 
 
@@ -22,12 +19,53 @@ export default function App(): JSX.Element {
   const [activeSub, setActiveSub] = useState<number>(0);
   const formRef = useRef<any>(null);
 
-  // Initial model (same as before)
-  const initialMfr = "Ekolution AB";
-  const initialProduct = productsByManufacturer[initialMfr][0];
+
   const [model, setModel] = useState<FormModel>({
-    quickScan: [{ fabrikant: initialMfr, productCategory: initialProduct, aantal: 1, eenheid: "m²" }],
+    quickScan: [
+      {
+        element: "",
+        fabrikant: "",
+        productCategory: "",
+        aantal: 1,
+        eenheid: "",
+      },
+    ],
   });
+
+    useEffect(() => {
+    setModel((prev) => {
+      const src = prev.structuralElements ?? [];
+      const prevQS = prev.quickScan ?? [];
+
+      // If no structural elements, do nothing (keeps existing quickScan)
+      if (src.length === 0) return prev;
+
+      const nextQS = src.map((row, i) => {
+        const existing = prevQS[i];
+
+        return {
+          element: row?.elements ?? "",
+
+          // keep what user already selected if present
+          fabrikant: existing?.fabrikant ?? "",
+          productCategory: existing?.productCategory ?? "",
+          aantal: existing?.aantal ?? 1,
+          eenheid: existing?.eenheid ?? "m²",
+        };
+      });
+
+      // prevent endless updates (only update if something actually changed)
+      const sameLength = prevQS.length === nextQS.length;
+      const sameElements =
+        sameLength &&
+        prevQS.every((q, i) => (q?.element ?? "") === (nextQS[i]?.element ?? ""));
+
+      if (sameLength && sameElements) return prev;
+
+      return { ...prev, quickScan: nextQS };
+    });
+  }, [model.structuralElements]);
+
 
   const currentStep = steps[activeStep];
   const currentSub = currentStep.substeps[activeSub];
