@@ -110,7 +110,7 @@ const ExportProductenPdfButton: React.FC = () => {
 
     const tableData = producten.map((item: any, index: number) => {
       const eenheid =
-        item.eenheid ?? computeCO2Equivalent(item.elements, item.productType, item.aantal);
+        item.eenheid ?? computeCO2Equivalent(item.elements, item.productTypes, item.aantal);
 
       const n = Number(eenheid);
       if (Number.isFinite(n)) totaalCO2credits += n;

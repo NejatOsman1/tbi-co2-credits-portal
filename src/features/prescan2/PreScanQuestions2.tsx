@@ -139,7 +139,7 @@ const ProductList: React.FC<ProductListProps> = ({ name }) => (
               </Box>
             </Tooltip>
 
-            <SelectField name="productType" label="Biobased product" fullWidth />
+            <SelectField name="productTypes" label="Biobased product" fullWidth />
             <CalculatedEenheidField />
             <ListDelField />
           </Box>
@@ -156,12 +156,12 @@ const ProductList: React.FC<ProductListProps> = ({ name }) => (
 const CalculatedEenheidField: React.FC = () => {
   // Read siblings inside the same NestField row
   const [{ value: elements }] = useField<string>("elements",{ initialValue: false });  
-  const [{ value: productType }] = useField<string>("productType",{ initialValue: "" });
+  const [{ value: productTypes }] = useField<string>("productTypes",{ initialValue: "" });
   const [{ value: aantal }] = useField<number>("aantal",{ initialValue: false });
-
+ 
   const computedValue = useMemo(
-    () => computeCO2Equivalent(elements, productType, aantal),
-    [elements, productType, aantal]
+    () => computeCO2Equivalent(elements, productTypes, aantal),
+    [elements, productTypes, aantal]
   );
 
   return (

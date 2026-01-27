@@ -33,7 +33,7 @@ export const prescanSchema2 = z.object({
   aantalm22: z.number().optional(),
   structuralElements: z.array(z.object({
         elements: elementsEnum,
-        productType: productTypeEnum,
+        productTypes: productTypeEnum,
         aantal: z.number().int().positive().optional(),
         eenheid: z.string().min(1, "Voer een eenheid in").optional(),
       })

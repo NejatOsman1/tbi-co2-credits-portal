@@ -6,6 +6,7 @@ const isValidPair = (m?: string, p?: string) =>
 
 export const quickScanRow = z.object({
   element: z.string().optional(), // prefilled, read-only,
+  productType: z.string().optional(),
   fabrikant: z.string().min(1, "Kies een fabrikant"),
   productCategory: z.string().min(1, "Kies een product"),
   aantal: z.number().positive({ message: "Voer een positief getal in" }),

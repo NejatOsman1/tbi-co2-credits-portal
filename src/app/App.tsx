@@ -24,6 +24,7 @@ export default function App(): JSX.Element {
     quickScan: [
       {
         element: "",
+        productType: "",
         fabrikant: "",
         productCategory: "",
         aantal: 1,
@@ -32,7 +33,7 @@ export default function App(): JSX.Element {
     ],
   });
 
-    useEffect(() => {
+  useEffect(() => {
     setModel((prev) => {
       const src = prev.structuralElements ?? [];
       const prevQS = prev.quickScan ?? [];
@@ -45,22 +46,25 @@ export default function App(): JSX.Element {
 
         return {
           element: row?.elements ?? "",
+          productType: row?.productTypes ?? "",
 
           // keep what user already selected if present
           fabrikant: existing?.fabrikant ?? "",
           productCategory: existing?.productCategory ?? "",
           aantal: existing?.aantal ?? 1,
-          eenheid: existing?.eenheid ?? "m²",
+
+          // don't prefill (AutoEenheidField will set it after product selection)
+          eenheid: existing?.eenheid ?? "",
         };
       });
 
-      // prevent endless updates (only update if something actually changed)
-      const sameLength = prevQS.length === nextQS.length;
-      const sameElements =
-        sameLength &&
-        prevQS.every((q, i) => (q?.element ?? "") === (nextQS[i]?.element ?? ""));
+      // ✅ update when length OR element OR productType changed
+      const shouldUpdate =
+        prevQS.length !== nextQS.length ||
+        prevQS.some((q, i) => (q?.element ?? "") !== (nextQS[i]?.element ?? "")) ||
+        prevQS.some((q, i) => (q?.productType ?? "") !== (nextQS[i]?.productType ?? ""));
 
-      if (sameLength && sameElements) return prev;
+      if (!shouldUpdate) return prev;
 
       return { ...prev, quickScan: nextQS };
     });

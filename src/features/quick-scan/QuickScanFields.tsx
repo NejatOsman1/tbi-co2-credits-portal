@@ -40,7 +40,13 @@ export function QuickScanFields() {
                     disabled
                     InputProps={{ readOnly: true }}
                   />
-
+                  <TextField
+                    name="productType"
+                    label="Biobased product"
+                    fullWidth
+                    disabled
+                    InputProps={{ readOnly: true }}
+                  />
                   <FabrikantField />
                   <ProductCategoryField />
                   <NumField name="aantal" label="Aantal" decimal={false} fullWidth />
