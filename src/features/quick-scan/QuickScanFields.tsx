@@ -27,7 +27,7 @@ export function QuickScanFields() {
                 <Box
                   sx={{
                     display: "grid",
-                    gridTemplateColumns: { xs: "1fr", sm: "1.1fr 1fr 1fr 1fr 1fr auto" }, // ✅ 6 cols
+                    gridTemplateColumns: { xs: "1fr", sm: "1.1fr 1fr 1fr 1fr 1fr 1fr auto", }, 
                     gap: 2,
                     alignItems: "center",
                   }}

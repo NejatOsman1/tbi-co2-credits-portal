@@ -98,8 +98,8 @@ const ExportProductenPdfButton: React.FC = () => {
     const totaalOppervlakteRaw = model.aantalm22;
     const totaalOppervlakte =
       totaalOppervlakteRaw === undefined ||
-      totaalOppervlakteRaw === null ||
-      totaalOppervlakteRaw === ""
+        totaalOppervlakteRaw === null ||
+        totaalOppervlakteRaw === ""
         ? "Onbekend"
         : totaalOppervlakteRaw;
 
@@ -135,6 +135,8 @@ const ExportProductenPdfButton: React.FC = () => {
     const pageH = doc.internal.pageSize.getHeight();
     const marginX = 14;
 
+    const fullTableW = pageW - marginX * 2;
+
     // --- Header banner ---
     doc.setFillColor(...COLORS.brandLight);
     doc.rect(0, 0, pageW, 28, "F");
@@ -168,7 +170,7 @@ const ExportProductenPdfButton: React.FC = () => {
       startY: 34,
       theme: "grid",
       margin: { left: marginX, right: marginX },
-      tableWidth: pageW - marginX * 2,
+      tableWidth: fullTableW,
       body: metaRows,
       styles: {
         fontSize: 9,
@@ -177,11 +179,12 @@ const ExportProductenPdfButton: React.FC = () => {
         lineWidth: 0.2,
         textColor: COLORS.textDark as any,
       },
+
       columnStyles: {
-        0: { cellWidth: 28, fontStyle: "bold", textColor: COLORS.helper as any },
-        1: { cellWidth: 54 },
-        2: { cellWidth: 34, fontStyle: "bold", textColor: COLORS.helper as any },
-        3: { cellWidth: 40 },
+        0: { cellWidth: 32, fontStyle: "bold", textColor: COLORS.helper as any },
+        1: { cellWidth: "auto" },
+        2: { cellWidth: 32, fontStyle: "bold", textColor: COLORS.helper as any },
+        3: { cellWidth: "auto" },
       },
     });
 
@@ -214,9 +217,11 @@ const ExportProductenPdfButton: React.FC = () => {
     // --- Main table ---
     const tableStartY = kpiY + 30;
 
+
     autoTable(doc, {
       startY: tableStartY,
       margin: { left: marginX, right: marginX },
+      tableWidth: fullTableW,
       head: [["Nr.", "Element", "Oppervlakte", "Biobased materiaal", "CO2 credits"]],
       body: tableData.map((r) => [
         r[0],
@@ -238,12 +243,13 @@ const ExportProductenPdfButton: React.FC = () => {
         textColor: 255,
         fontStyle: "bold",
       },
+
       columnStyles: {
         0: { cellWidth: 10, halign: "center" },
-        1: { cellWidth: 45 },
+        1: { cellWidth: "auto" },
         2: { cellWidth: 26, halign: "right" },
-        3: { cellWidth: 60 },
-        4: { cellWidth: 20, halign: "right" },
+        3: { cellWidth: "auto" },
+        4: { cellWidth: 26, halign: "right" },
       },
     });
 
@@ -296,8 +302,8 @@ const ExportProductenPdfButton: React.FC = () => {
         textColor: COLORS.textDark as any,
       },
       columnStyles: {
-        0: { cellWidth: (pageW - marginX * 2) / 2 },
-        1: { cellWidth: (pageW - marginX * 2) / 2 },
+        0: { cellWidth: fullTableW / 2 },
+        1: { cellWidth: fullTableW / 2 },
       },
     });
 
