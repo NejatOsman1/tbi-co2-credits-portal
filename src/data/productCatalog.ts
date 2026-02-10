@@ -8,110 +8,80 @@ export type ProductEntry = {
   unit: string;   // measurement unit, e.g. m3, m2, kg, m
 };
 
-// NOTE: I converted the European decimal commas to dots so these are real numbers.
+// NOTE: I converted the European decimal commas to dots so these are real numbers. 762,766,124,103,804,762,753,773,768,753,753
 export const ENTRIES: ProductEntry[] = [
-  { type: "Constructie: CLT or LVL", manufacturer: "Stora Enso", product: "CLT (Cross Laminated Timber)", carbon: -762.0, unit: "m3" },
-  { type: "Isolatie: stro", manufacturer: "EcoCocon s.r.o.", product: "Standard and Braced Straw Panels", carbon: -123.0, unit: "m2" },
-
-  { type: "Constructie: Hout", manufacturer: "Stora Enso", product: "ThermoWood®", carbon: -744.0, unit: "m3" },
-  { type: "Constructie: Hout", manufacturer: "Stora Enso", product: "KVH® structural timber", carbon: -717.0, unit: "m3" },
-  { type: "Constructie: CLT or LVL", manufacturer: "Stora Enso", product: "LVL (Laminated Veneer Lumber)", carbon: -766.0, unit: "m3" },
-  { type: "Constructie: Hout", manufacturer: "Stora Enso", product: "Classic Planed", carbon: -753.0, unit: "m3" },
-  { type: "Constructie: Hout", manufacturer: "Stora Enso", product: "Classic Sawn", carbon: -733.0, unit: "m3" },
-  { type: "Constructie: Hout", manufacturer: "Stora Enso", product: "Industrial components", carbon: -833.0, unit: "m3" },
-  { type: "Constructie: Hout", manufacturer: "Stora Enso", product: "Cladding and Decking", carbon: -728.0, unit: "m3" },
-  { type: "Constructie: CLT or LVL", manufacturer: "Stora Enso", product: "SylvaTM CLT Rib", carbon: -124.0, unit: "m3" },
-  { type: "Constructie: CLT or LVL", manufacturer: "Stora Enso", product: "SylvaTM LVL Rib", carbon: -103.0, unit: "m3" },
-  { type: "Constructie: CLT or LVL", manufacturer: "Stora Enso", product: "Multiple glued LVL G", carbon: -804.0, unit: "m3" },
-
-  { type: "Isolatie: hemp or flax", manufacturer: "Ekolution AB", product: "Ekolution® Hemp Fibre Insulation", carbon: -7.88, unit: "m2" },
-
-  { type: "Isolatie: houtvezels", manufacturer: "Ekovilla Oy", product: "Loose Fill Cellulose Insulation", carbon: -1.36, unit: "kg" },
-  { type: "Constructie: CLT or LVL", manufacturer: "KLH Massivholz GmbH", product: "KLH® - CLT (Cross Laminated Timber)", carbon: -762.0, unit: "m3" },
-
-  { type: "Constructie: Spaanplaat", manufacturer: "Grigeo Baltwood UAB", product: "Painted and non-painted Hard Fiberboard", carbon: -1600.0, unit: "m3" },
-
-  { type: "Composiet: wood-based", manufacturer: "Metsä Wood", product: "Metsä Wood Birch plywood", carbon: -618.0, unit: "m3" },
-  { type: "Composiet: wood-based", manufacturer: "Metsä Wood", product: "Metsä Wood Finnjoist® I-beam", carbon: -1.63, unit: "kg" },
-
-  { type: "Isolatie: houtvezels", manufacturer: "Ekovilla Oy", product: "Slab cellulose thermal insulation", carbon: -1.91, unit: "m2" },
-
+  { type: "Composiet: conrete based", manufacturer: "Forbo Flooring B.V.", product: "Marmoleum 2.0 and 2.5 mm", carbon: -4.17, unit: "m3" },
+  { type: "Composiet: conrete based", manufacturer: "James Hardie Europe GmbH", product: "fermacell® gypsum fibre board", carbon: -3.58, unit: "m3" },
+  { type: "Composiet: conrete based", manufacturer: "LEKO LABS", product: "LEKO LABS Wall System", carbon: -1.52, unit: "kg" },
   { type: "Composiet: conrete based", manufacturer: "LK Systems AB", product: "LK HeatFloor Board", carbon: -1.12, unit: "kg" },
+  { type: "Composiet: conrete based", manufacturer: "ZinCo GmbH", product: "Green Roof System", carbon: -5.32, unit: "m3" },
 
-  { type: "Constructie: Spaanplaat", manufacturer: "Byggelit AB", product: "Particle board P3, P5 and P7", carbon: -934.0, unit: "m3" },
-
-  { type: "Constructie: Hout", manufacturer: "SIA Amber Wood", product: "Oak multilayer floor boards", carbon: -2270.0, unit: "m3" },
-  { type: "Constructie: Hout", manufacturer: "SIA Amber Wood", product: "Two layer floor boards", carbon: -2070.0, unit: "m3" },
-  { type: "Constructie: Hout", manufacturer: "SIA Amber Wood", product: "Oak solid floor boards", carbon: -1730.0, unit: "m3" },
-
-  { type: "Constructie: Hout", manufacturer: "Latvia Timber International SIA", product: "Planed and painted softwood", carbon: -750.0, unit: "m3" },
-
-  { type: "Constructie: Spaanplaat", manufacturer: "UAB VMG Lignum constructions", product: "Load-bearing construction particle boards", carbon: -1100.0, unit: "m3" },
-
-  { type: "Constructie: Hout", manufacturer: "Nerkoon Höyläämö Oy", product: "Exterior Claddings", carbon: -708.0, unit: "m3" },
-
-  { type: "Composiet: wood-based", manufacturer: "GRUPO GARNICA PLYWOOD, S.A.U.", product: "Plywood Panels : LAUDIO FORM, LAUDIO WIRE", carbon: -3130.0, unit: "m3" },
-
-  { type: "Composiet: wood-based", manufacturer: "E. Vigolungo SpA", product: "VigoPlyL 6/5", carbon: -1520.0, unit: "m3" },
   { type: "Composiet: wood-based", manufacturer: "E. Vigolungo SpA", product: "VigoPlyL 12/7", carbon: -1460.0, unit: "m3" },
   { type: "Composiet: wood-based", manufacturer: "E. Vigolungo SpA", product: "VigoPlyL 15/7", carbon: -1440.0, unit: "m3" },
   { type: "Composiet: wood-based", manufacturer: "E. Vigolungo SpA", product: "VigoPlyL 18/9", carbon: -1460.0, unit: "m3" },
-
+  { type: "Composiet: wood-based", manufacturer: "E. Vigolungo SpA", product: "VigoPlyL 6/5", carbon: -1520.0, unit: "m3" },
   { type: "Composiet: wood-based", manufacturer: "GRUPO GARNICA PLYWOOD", product: "Plywood Panels: LAUDIO PINE, LAUDIO DECO, LAUDIO LVL", carbon: -2200.0, unit: "m3" },
+  { type: "Composiet: wood-based", manufacturer: "GRUPO GARNICA PLYWOOD, S.A.U.", product: "Plywood Panels : LAUDIO FORM, LAUDIO WIRE", carbon: -3130.0, unit: "m3" },
+  { type: "Composiet: wood-based", manufacturer: "Metsä Wood", product: "Metsä Wood Birch plywood", carbon: -618.0, unit: "m3" },
+  { type: "Composiet: wood-based", manufacturer: "Metsä Wood", product: "Metsä Wood Finnjoist® I-beam", carbon: -1.63, unit: "kg" },
 
-  { type: "Constructie: Hout", manufacturer: "OrganoWood AB", product: "Silicium HT for flooring", carbon: -773.0, unit: "m3" },
-  { type: "Constructie: Hout", manufacturer: "OrganoWood AB", product: "Silicium HT for cladding", carbon: -773.0, unit: "m3" },
-
-  { type: "Constructie: Hout", manufacturer: "Combiwood OÜ", product: "Natural pine mouldings", carbon: -0.9, unit: "m" },
-  { type: "Constructie: Hout", manufacturer: "Combiwood OÜ", product: "Painted pine mouldings", carbon: -0.9, unit: "m" },
-
-  { type: "Constructie: Hout", manufacturer: "Vudlande SIA", product: "Planed sawn timber", carbon: -724.0, unit: "m3" },
-
-  { type: "Composiet: conrete based", manufacturer: "LEKO LABS", product: "LEKO LABS Wall System", carbon: -1.52, unit: "kg" },
-
-  { type: "Constructie: Hout", manufacturer: "UPM Timber", product: "Standard and special sawn timber", carbon: -786.0, unit: "m3" },
-
-  { type: "Constructie: Hout", manufacturer: "Tarkett France", product: "Wood Flooring - Swedish Production, 13 - 14 mm thick", carbon: -7.49, unit: "m2" },
-  { type: "Constructie: Hout", manufacturer: "Tarkett France", product: "Wood Flooring - Swedish Production, 14 mm thick with Walnut and Maple wood", carbon: -3.92, unit: "m2" },
-  { type: "Constructie: Hout", manufacturer: "Tarkett France", product: "Wood Flooring - Swedish Production, 22 mm thick", carbon: -12.7, unit: "m2" },
-
-  { type: "Constructie: Hout", manufacturer: "Degmeda UAB", product: "Fire tempered cladding and decking", carbon: -707.0, unit: "m3" },
-
+  { type: "Constructie: CLT or LVL", manufacturer: "Derix", product: "X-LAM (Cross laminated timber) | with retour system", carbon: -768.0, unit: "m3" },
+  { type: "Constructie: CLT or LVL", manufacturer: "HASSLACHER Holding GmbH", product: "Glued laminated timber, glued solid timber, block glued glulam, special components", carbon: -753.0, unit: "m3" },
+  { type: "Constructie: CLT or LVL", manufacturer: "HASSLACHER Holding GmbH", product: "Structural finger jointed solid timber & GLT® – Girder Longitudinally Tensiletested", carbon: -753.0, unit: "m3" },
+  { type: "Constructie: CLT or LVL", manufacturer: "KLH Massivholz GmbH", product: "KLH® - CLT (Cross Laminated Timber)", carbon: -762.0, unit: "m3" },
+  { type: "Constructie: CLT or LVL", manufacturer: "Stora Enso", product: "CLT (Cross Laminated Timber)", carbon: -762.0, unit: "m3" },
+  { type: "Constructie: CLT or LVL", manufacturer: "Stora Enso", product: "LVL (Laminated Veneer Lumber)", carbon: -766.0, unit: "m3" },
+  { type: "Constructie: CLT or LVL", manufacturer: "Stora Enso", product: "Multiple glued LVL G", carbon: -804.0, unit: "m3" },
+  { type: "Constructie: CLT or LVL", manufacturer: "Stora Enso", product: "SylvaTM CLT Rib", carbon: -124.0, unit: "m3" },
+  { type: "Constructie: CLT or LVL", manufacturer: "Stora Enso", product: "SylvaTM LVL Rib", carbon: -103.0, unit: "m3" },
   { type: "Constructie: CLT or LVL", manufacturer: "Studiengemeinschaft Holzleimbau e.V.", product: "Cross-laminated timber (X-LAM)", carbon: -753.0, unit: "m3" },
   { type: "Constructie: CLT or LVL", manufacturer: "Studiengemeinschaft Holzleimbau e.V.", product: "Glued laminated timber (Glulam)", carbon: -773.0, unit: "m3" },
 
-  { type: "Constructie: CLT or LVL", manufacturer: "Derix", product: "X-LAM (Cross laminated timber) | with retour system", carbon: -768.0, unit: "m3" },
-
-  { type: "Constructie: Hout", manufacturer: "Svenskt Trä", product: "Swedish sawn dried timber of spruce or pine", carbon: -876.0, unit: "m3" },
-
-  { type: "Constructie: Spaanplaat", manufacturer: "SWISS KRONO Group", product: "OSB", carbon: -890.0, unit: "m3" },
-
-  { type: "Isolatie: houtvezels", manufacturer: "GUTEX Holzfaserplattenwerk H. Henselmann GmbH + Co KG", product: "Wood fibre insulation boards", carbon: -198.4, unit: "m3" },
-
-  { type: "Constructie: CLT or LVL", manufacturer: "HASSLACHER Holding GmbH", product: "Glued laminated timber, glued solid timber, block glued glulam, special components", carbon: -753.0, unit: "m3" },
-
-  { type: "Constructie: Hout", manufacturer: "Russwood Ltd", product: "Thermopine® cladding", carbon: -742.0, unit: "m3" },
-
-  { type: "Constructie: CLT or LVL", manufacturer: "HASSLACHER Holding GmbH", product: "Structural finger jointed solid timber & GLT® – Girder Longitudinally Tensiletested", carbon: -753.0, unit: "m3" },
-
-  { type: "Constructie: Hout", manufacturer: "Russwood Ltd", product: "Thermopine® profiled cladding coated with Teknos", carbon: -742.0, unit: "m3" },
-
-  { type: "Composiet: conrete based", manufacturer: "ZinCo GmbH", product: "Green Roof System", carbon: -5.32, unit: "m3" },
-
-  { type: "Composiet: conrete based", manufacturer: "Forbo Flooring B.V.", product: "Marmoleum 2.0 and 2.5 mm", carbon: -4.17, unit: "m3" },
-
-  { type: "Composiet: conrete based", manufacturer: "James Hardie Europe GmbH", product: "fermacell® gypsum fibre board", carbon: -3.58, unit: "m3" },
-
-  { type: "Isolatie: hemp or flax", manufacturer: "Gramitherm", product: "Gramitherm 100", carbon: -7.03, unit: "m3" },
-
   { type: "Constructie: Hout", manufacturer: "Aveco de Bondt", product: "HSB frame voor dragende en nietdragende binnenwand", carbon: -9.07, unit: "m2" },
   { type: "Constructie: Hout", manufacturer: "Aveco de Bondt", product: "HSB frame voor vloerelement", carbon: -15.46, unit: "m2" },
-
-  { type: "Constructie: Hout", manufacturer: "Platowood", product: "Gevelpaneel vuren", carbon: -24.7, unit: "m2" },
-  { type: "Constructie: Hout", manufacturer: "Platowood", product: "Gevelpaneel populier", carbon: -29.7, unit: "m2" },
+  { type: "Constructie: Hout", manufacturer: "Combiwood OÜ", product: "Natural pine mouldings", carbon: -0.9, unit: "m" },
+  { type: "Constructie: Hout", manufacturer: "Combiwood OÜ", product: "Painted pine mouldings", carbon: -0.9, unit: "m" },
+  { type: "Constructie: Hout", manufacturer: "Degmeda UAB", product: "Fire tempered cladding and decking", carbon: -707.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "Latvia Timber International SIA", product: "Planed and painted softwood", carbon: -750.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "Nerkoon Höyläämö Oy", product: "Exterior Claddings", carbon: -708.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "OrganoWood AB", product: "Silicium HT for cladding", carbon: -773.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "OrganoWood AB", product: "Silicium HT for flooring", carbon: -773.0, unit: "m3" },
   { type: "Constructie: Hout", manufacturer: "Platowood", product: "Gevelpaneel fraké", carbon: -31.8, unit: "m2" },
+  { type: "Constructie: Hout", manufacturer: "Platowood", product: "Gevelpaneel populier", carbon: -29.7, unit: "m2" },
+  { type: "Constructie: Hout", manufacturer: "Platowood", product: "Gevelpaneel vuren", carbon: -24.7, unit: "m2" },
+  { type: "Constructie: Hout", manufacturer: "Russwood Ltd", product: "Thermopine® cladding", carbon: -742.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "Russwood Ltd", product: "Thermopine® profiled cladding coated with Teknos", carbon: -742.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "SIA Amber Wood", product: "Oak multilayer floor boards", carbon: -2270.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "SIA Amber Wood", product: "Oak solid floor boards", carbon: -1730.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "SIA Amber Wood", product: "Two layer floor boards", carbon: -2070.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "Stora Enso", product: "Cladding and Decking", carbon: -728.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "Stora Enso", product: "Classic Planed", carbon: -753.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "Stora Enso", product: "Classic Sawn", carbon: -733.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "Stora Enso", product: "Industrial components", carbon: -833.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "Stora Enso", product: "KVH® structural timber", carbon: -717.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "Stora Enso", product: "ThermoWood®", carbon: -744.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "Svenskt Trä", product: "Swedish sawn dried timber of spruce or pine", carbon: -876.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "Tarkett France", product: "Wood Flooring - Swedish Production, 13 - 14 mm thick", carbon: -7.49, unit: "m2" },
+  { type: "Constructie: Hout", manufacturer: "Tarkett France", product: "Wood Flooring - Swedish Production, 14 mm thick with Walnut and Maple wood", carbon: -3.92, unit: "m2" },
+  { type: "Constructie: Hout", manufacturer: "Tarkett France", product: "Wood Flooring - Swedish Production, 22 mm thick", carbon: -12.7, unit: "m2" },
+  { type: "Constructie: Hout", manufacturer: "UPM Timber", product: "Standard and special sawn timber", carbon: -786.0, unit: "m3" },
+  { type: "Constructie: Hout", manufacturer: "Vudlande SIA", product: "Planed sawn timber", carbon: -724.0, unit: "m3" },
 
+  { type: "Constructie: Spaanplaat", manufacturer: "Byggelit AB", product: "Particle board P3, P5 and P7", carbon: -934.0, unit: "m3" },
+  { type: "Constructie: Spaanplaat", manufacturer: "Grigeo Baltwood UAB", product: "Painted and non-painted Hard Fiberboard", carbon: -1600.0, unit: "m3" },
+  { type: "Constructie: Spaanplaat", manufacturer: "SWISS KRONO Group", product: "OSB", carbon: -890.0, unit: "m3" },
+  { type: "Constructie: Spaanplaat", manufacturer: "UAB VMG Lignum constructions", product: "Load-bearing construction particle boards", carbon: -1100.0, unit: "m3" },
+
+  { type: "Isolatie: hemp or flax", manufacturer: "Ekolution AB", product: "Ekolution® Hemp Fibre Insulation", carbon: -7.88, unit: "m2" },
   { type: "Isolatie: hemp or flax", manufacturer: "FAAY", product: "Kingsize prefab inner wall (flax + gypsum)", carbon: 19.69, unit: "m2" },
+  { type: "Isolatie: hemp or flax", manufacturer: "Gramitherm", product: "Gramitherm 100", carbon: -7.03, unit: "m3" },
+
+  { type: "Isolatie: houtvezels", manufacturer: "Ekovilla Oy", product: "Loose Fill Cellulose Insulation", carbon: -1.36, unit: "kg" },
+  { type: "Isolatie: houtvezels", manufacturer: "Ekovilla Oy", product: "Slab cellulose thermal insulation", carbon: -1.91, unit: "m2" },
+  { type: "Isolatie: houtvezels", manufacturer: "GUTEX Holzfaserplattenwerk H. Henselmann GmbH + Co KG", product: "Wood fibre insulation boards", carbon: -198.4, unit: "m3" },
+
+  { type: "Isolatie: stro", manufacturer: "Bioblow", product: "Bioblow inblaasstro isolatie", carbon: -198.4, unit: "m3" },
+  { type: "Isolatie: stro", manufacturer: "EcoCocon s.r.o.", product: "Standard and Braced Straw Panels", carbon: -123.0, unit: "m2" },
 
   ...houtGeenEpd
 ];
@@ -124,16 +94,16 @@ export type ProductGroup = {
 
 export const PRODUCTS : ProductGroup[] = [
   {type: "Constructie: Hout", carbon: 618},
-  {type: "Constructie: CLT or LVL",carbon: 12},
+  {type: "Constructie: CLT or LVL",carbon: 647}, // based on average of co2 content from oncra quickscan
   {type: "Constructie: Bamboo", carbon: 14},
   {type: "Constructie: Spaanplaat", carbon: 1051},
   {type: "Isolatie: houtvezels", carbon: 198},
-  {type: "Isolatie: stro", carbon:775},
+  {type: "Isolatie: stro", carbon:175},
   {type: "Isolatie: hemp or flax", carbon:34},
   {type: "Composiet: wood-based", carbon:34},
   {type: "Composiet: mycelium-based", carbon:34},
   {type: "Composiet: conrete based", carbon:34},
-] 
+]
 
 
 export const getCarbonByType = (type: string): number | undefined => {
