@@ -19,10 +19,12 @@ type PdfMeta = {
   projectName: string;
   projectNumber: string;
 };
-
+// const primaryColor = "#a816d9";
+// const primaryHover = "#8a11b5";
+// const textColour = "#630d80";
 const COLORS = {
-  brandDark: [0, 102, 153] as const, // dark blue
-  brandLight: [232, 243, 249] as const, // light blue banner
+  brandDark: [99, 13, 128] as const, // dark blue
+  brandLight: [220, 200, 235] as const, // light blue banner
   textDark: [20, 40, 55] as const,
   grid: [210, 220, 230] as const,
   boxBg: [245, 248, 251] as const,
@@ -114,12 +116,12 @@ const ExportProductenPdfButton: React.FC = () => {
 
       const n = Number(eenheid);
       if (Number.isFinite(n)) totaalCO2credits += n;
-
+      
       return [
         String(index + 1),
         item.elements || "-",
         item.aantal ?? "-",
-        item.productType || "-",
+        item.productTypes || "-",
         Number.isFinite(n) ? n : (eenheid ?? ""),
       ];
     });
@@ -151,7 +153,7 @@ const ExportProductenPdfButton: React.FC = () => {
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
-    doc.setTextColor(...COLORS.helper);
+    doc.setTextColor(...COLORS.textDark);
     doc.text("CO2 Credits Quickscan", marginX, 22);
 
     // --- Meta grid ---
@@ -264,7 +266,7 @@ const ExportProductenPdfButton: React.FC = () => {
       "Voor het binnenspouwblad wordt er uitgegaan van OSB-plaat van 18 mm.",
       "Voor het dak wordt er uitgegaan van binnen spaanplaat van 18 mm en buiten spaanplaat van 11 mm.",
       "Voor het HSB wordt er uitgegaan van naaldhout biogene CO2 opslag van 618 kg CO2/m³.",
-      "Voor het dak wordt er uitgegaan van bioblow stro biogene CO2 opslag van 775 kg CO2/m³.",
+      "Voor het dak wordt er uitgegaan van bioblow stro biogene CO2 opslag van 175 kg CO2/m³.",
       "Voor de muren wordt er uitgegaan van GUTEX Thermoflex biogene CO2 opslag van 198 kg CO2/m³.",
       "Voor de spaanplaten wordt er uitgegaan van Unilin spaanplaten biogene CO2 opslag van 1051,7 kg CO2/m³.",
       "Aantal CO2 credits wordt berekend als: oppervlakte element × dikte × biogene CO2 opslag toegepast product.",

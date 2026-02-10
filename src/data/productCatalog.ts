@@ -10,18 +10,13 @@ export type ProductEntry = {
 
 // NOTE: I converted the European decimal commas to dots so these are real numbers. 762,766,124,103,804,762,753,773,768,753,753
 export const ENTRIES: ProductEntry[] = [
-  { type: "Composiet: conrete based", manufacturer: "Forbo Flooring B.V.", product: "Marmoleum 2.0 and 2.5 mm", carbon: -4.17, unit: "m3" },
-  { type: "Composiet: conrete based", manufacturer: "James Hardie Europe GmbH", product: "fermacell® gypsum fibre board", carbon: -3.58, unit: "m3" },
-  { type: "Composiet: conrete based", manufacturer: "LEKO LABS", product: "LEKO LABS Wall System", carbon: -1.52, unit: "kg" },
-  { type: "Composiet: conrete based", manufacturer: "LK Systems AB", product: "LK HeatFloor Board", carbon: -1.12, unit: "kg" },
-  { type: "Composiet: conrete based", manufacturer: "ZinCo GmbH", product: "Green Roof System", carbon: -5.32, unit: "m3" },
-
   { type: "Composiet: wood-based", manufacturer: "E. Vigolungo SpA", product: "VigoPlyL 12/7", carbon: -1460.0, unit: "m3" },
   { type: "Composiet: wood-based", manufacturer: "E. Vigolungo SpA", product: "VigoPlyL 15/7", carbon: -1440.0, unit: "m3" },
   { type: "Composiet: wood-based", manufacturer: "E. Vigolungo SpA", product: "VigoPlyL 18/9", carbon: -1460.0, unit: "m3" },
   { type: "Composiet: wood-based", manufacturer: "E. Vigolungo SpA", product: "VigoPlyL 6/5", carbon: -1520.0, unit: "m3" },
   { type: "Composiet: wood-based", manufacturer: "GRUPO GARNICA PLYWOOD", product: "Plywood Panels: LAUDIO PINE, LAUDIO DECO, LAUDIO LVL", carbon: -2200.0, unit: "m3" },
   { type: "Composiet: wood-based", manufacturer: "GRUPO GARNICA PLYWOOD, S.A.U.", product: "Plywood Panels : LAUDIO FORM, LAUDIO WIRE", carbon: -3130.0, unit: "m3" },
+  { type: "Composiet: wood-based", manufacturer: "LEKO LABS", product: "LEKO LABS Wall System", carbon: -1.52, unit: "kg" },
   { type: "Composiet: wood-based", manufacturer: "Metsä Wood", product: "Metsä Wood Birch plywood", carbon: -618.0, unit: "m3" },
   { type: "Composiet: wood-based", manufacturer: "Metsä Wood", product: "Metsä Wood Finnjoist® I-beam", carbon: -1.63, unit: "kg" },
 
@@ -69,12 +64,17 @@ export const ENTRIES: ProductEntry[] = [
 
   { type: "Constructie: Spaanplaat", manufacturer: "Byggelit AB", product: "Particle board P3, P5 and P7", carbon: -934.0, unit: "m3" },
   { type: "Constructie: Spaanplaat", manufacturer: "Grigeo Baltwood UAB", product: "Painted and non-painted Hard Fiberboard", carbon: -1600.0, unit: "m3" },
+  { type: "Constructie: Spaanplaat", manufacturer: "LK Systems AB", product: "LK HeatFloor Board", carbon: -1.12, unit: "kg" },
   { type: "Constructie: Spaanplaat", manufacturer: "SWISS KRONO Group", product: "OSB", carbon: -890.0, unit: "m3" },
   { type: "Constructie: Spaanplaat", manufacturer: "UAB VMG Lignum constructions", product: "Load-bearing construction particle boards", carbon: -1100.0, unit: "m3" },
 
+  { type: "Isolatie: gipsvezel", manufacturer: "James Hardie Europe GmbH", product: "fermacell® gypsum fibre board", carbon: -3.58, unit: "m3" },
+
   { type: "Isolatie: hemp or flax", manufacturer: "Ekolution AB", product: "Ekolution® Hemp Fibre Insulation", carbon: -7.88, unit: "m2" },
   { type: "Isolatie: hemp or flax", manufacturer: "FAAY", product: "Kingsize prefab inner wall (flax + gypsum)", carbon: 19.69, unit: "m2" },
-  { type: "Isolatie: hemp or flax", manufacturer: "Gramitherm", product: "Gramitherm 100", carbon: -7.03, unit: "m3" },
+
+  { type: "Overige", manufacturer: "ZinCo GmbH", product: "Green Roof System", carbon: -5.32, unit: "m3" },
+  { type: "Overige", manufacturer: "Forbo Flooring B.V.", product: "Marmoleum 2.0 and 2.5 mm", carbon: -4.17, unit: "m3" },
 
   { type: "Isolatie: houtvezels", manufacturer: "Ekovilla Oy", product: "Loose Fill Cellulose Insulation", carbon: -1.36, unit: "kg" },
   { type: "Isolatie: houtvezels", manufacturer: "Ekovilla Oy", product: "Slab cellulose thermal insulation", carbon: -1.91, unit: "m2" },
@@ -82,6 +82,8 @@ export const ENTRIES: ProductEntry[] = [
 
   { type: "Isolatie: stro", manufacturer: "Bioblow", product: "Bioblow inblaasstro isolatie", carbon: -198.4, unit: "m3" },
   { type: "Isolatie: stro", manufacturer: "EcoCocon s.r.o.", product: "Standard and Braced Straw Panels", carbon: -123.0, unit: "m2" },
+  { type: "Isolatie: stro", manufacturer: "Gramitherm", product: "Gramitherm 100", carbon: -7.03, unit: "m3" },
+
 
   ...houtGeenEpd
 ];
@@ -93,14 +95,15 @@ export type ProductGroup = {
 }
 
 export const PRODUCTS : ProductGroup[] = [
-  {type: "Constructie: Hout", carbon: 618},
-  {type: "Constructie: CLT or LVL",carbon: 647}, // based on average of co2 content from oncra quickscan
+  {type: "Constructie: Hout", carbon: 618 }, //kg/m3 based on average of co2 content from oncra quickscan materials
+  {type: "Constructie: CLT or LVL",carbon: 775}, //kg/m3 based on average of co2 content from oncra quickscan materials
+ 
+  {type: "Constructie: Spaanplaat", carbon: 1051 }, //kg/m3 based on average of co2 content from oncra quickscan materials
+  {type: "Isolatie: houtvezels", carbon: 198 }, //kg/m3 based on average of co2 content from oncra quickscan materials
+  {type: "Isolatie: stro", carbon:175}, //kg/m3 bioblow stro
+  {type: "Isolatie: hemp or flax", carbon:34}, //13,79 kg/m2! gemiddelde van quickscan materialen
+  {type: "Composiet: wood-based", carbon:1689}, // kg/m3
   {type: "Constructie: Bamboo", carbon: 14},
-  {type: "Constructie: Spaanplaat", carbon: 1051},
-  {type: "Isolatie: houtvezels", carbon: 198},
-  {type: "Isolatie: stro", carbon:175},
-  {type: "Isolatie: hemp or flax", carbon:34},
-  {type: "Composiet: wood-based", carbon:34},
   {type: "Composiet: mycelium-based", carbon:34},
   {type: "Composiet: conrete based", carbon:34},
 ]

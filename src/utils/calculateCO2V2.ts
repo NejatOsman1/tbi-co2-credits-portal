@@ -33,10 +33,21 @@ export function computeCO2Equivalent(
     CO2Credits =
       (0.018 * aantal * getCarbonByType(productType)) / 1000;
   }
+  if (productType === "Isolatie: hemp or flax") {
+    CO2Credits = (aantal * getCarbonByType(productType)) / 1000;
+  }
+
 
   return CO2Credits.toPrecision(2);
 }
+// { type: "Constructie: Hout", carbon: 6955 }, //kg/m3 based on average of co2 content from oncra quickscan materials
+// { type: "Constructie: CLT or LVL", carbon: 647 }, //kg/m3 based on average of co2 content from oncra quickscan materials
 
+// { type: "Constructie: Spaanplaat", carbon: 1051 }, //kg/m3 based on average of co2 content from oncra quickscan materials
+// { type: "Isolatie: houtvezels", carbon: 198 }, //kg/m3 based on average of co2 content from oncra quickscan materials
+// { type: "Isolatie: stro", carbon: 175 }, //kg/m3 bioblow stro
+// { type: "Isolatie: hemp or flax", carbon: 34 }, //13,79 kg/m2! gemiddelde van quickscan materialen
+// { type: "Composiet: wood-based", carbon: 1689 }, // kg/m3
 export function computeCO2Equivalent2(
   elements: string | undefined,
   aantal: number | undefined
