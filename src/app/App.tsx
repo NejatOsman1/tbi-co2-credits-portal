@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, useEffect } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { Box, Button, Container, Divider, Paper, Typography } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { AutoFields, AutoForm, ErrorsField } from "uniforms-mui";
@@ -33,42 +33,51 @@ export default function App(): JSX.Element {
     ],
   });
 
+  // Add this ref to track if quickScan has been initialized
+  const quickScanInitialized = useRef(false);
+
   useEffect(() => {
     setModel((prev) => {
       const src = prev.structuralElements ?? [];
       const prevQS = prev.quickScan ?? [];
 
-      // If no structural elements, do nothing (keeps existing quickScan)
+      // If no structural elements, do nothing
       if (src.length === 0) return prev;
 
-      const nextQS = src.map((row, i) => {
+      // Check if we need to update
+      const lengthChanged = prevQS.length !== src.length;
+
+      // Check if any element/productType in structuralElements differs from quickScan
+      const hasNewData = src.some((row, i) => {
         const existing = prevQS[i];
-
-        return {
-          element: row?.elements ?? "",
-          productType: row?.productTypes ?? "",
-
-          // keep what user already selected if present
-          fabrikant: existing?.fabrikant ?? "",
-          productCategory: existing?.productCategory ?? "",
-          aantal: existing?.aantal ?? 1,
-
-          // don't prefill (AutoEenheidField will set it after product selection)
-          eenheid: existing?.eenheid ?? "",
-        };
+        return (
+          row?.elements && !existing?.element ||
+          row?.productTypes && !existing?.productType
+        );
       });
 
-      // ✅ update when length OR element OR productType changed
-      const shouldUpdate =
-        prevQS.length !== nextQS.length ||
-        prevQS.some((q, i) => (q?.element ?? "") !== (nextQS[i]?.element ?? "")) ||
-        prevQS.some((q, i) => (q?.productType ?? "") !== (nextQS[i]?.productType ?? ""));
+      if (!quickScanInitialized.current || lengthChanged || hasNewData) {
+        const nextQS = src.map((row, i) => {
+          const existing = prevQS[i];
 
-      if (!shouldUpdate) return prev;
+          return {
+            // Prefill from structural elements only if empty
+            element: existing?.element || row?.elements || "",
+            productType: existing?.productType || row?.productTypes || "",
+            fabrikant: existing?.fabrikant ?? "",
+            productCategory: existing?.productCategory ?? "",
+            aantal: existing?.aantal ?? 1,
+            eenheid: existing?.eenheid ?? "",
+          };
+        });
 
-      return { ...prev, quickScan: nextQS };
+        quickScanInitialized.current = true;
+        return { ...prev, quickScan: nextQS };
+      }
+
+      return prev;
     });
-  }, [model.structuralElements]);
+  }, [model.structuralElements]); // Watch the entire array, not just length// ✅ Only depend on structuralElements
 
 
   const currentStep = steps[activeStep];

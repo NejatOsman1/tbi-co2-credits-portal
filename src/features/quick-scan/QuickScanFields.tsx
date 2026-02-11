@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { ListField, NestField, NumField, ListDelField, TextField } from "uniforms-mui";
+import { ListField, NestField, NumField, ListDelField, TextField, SelectField } from "uniforms-mui";
 import { useField, useForm } from "uniforms";
 import { calcTotalTonCO2e, formatTonCO2e } from "../../utils/calculateCO2";
 import { FabrikantField } from "./fields/FabrikantField";
@@ -33,18 +33,18 @@ export function QuickScanFields() {
                   }}
                 >
                   {/* ✅ NEW read-only column */}
-                  <TextField
+                  <SelectField
                     name="element"
                     label="Element"
                     fullWidth
-                    disabled
+                    
                     InputProps={{ readOnly: true }}
                   />
-                  <TextField
+                  <SelectField
                     name="productType"
                     label="Biobased product"
                     fullWidth
-                    disabled
+                   
                     InputProps={{ readOnly: true }}
                   />
                   <FabrikantField />
