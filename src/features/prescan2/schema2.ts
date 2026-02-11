@@ -9,13 +9,10 @@ export const productTypes = [
   "Constructie: Hout",
   "Constructie: Spaanplaat",
   "Constructie: CLT or LVL",
-  "Constructie: Bamboo",
   "Isolatie: houtvezels",
   "Isolatie: stro",
   "Isolatie: hemp or flax",
   "Composiet: wood-based",
-  "Composiet: mycelium-based",
-  "Composiet: conrete based",
 ] as const;
 
 export const elements = [

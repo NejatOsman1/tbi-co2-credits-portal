@@ -94,7 +94,7 @@ export const steps: StepDef[] = [
     substeps: [
       {
         key: "projectplan",
-        label: "Projectplan template invullen",
+        label: "Oncra Projectplan Data",
         description: "Vul het projectplan in.",
         fields: [
           "projectplanTitel",

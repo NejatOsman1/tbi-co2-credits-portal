@@ -13,18 +13,17 @@ import { useForm } from "uniforms";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { computeCO2Equivalent } from "./calculateCO2V2.js";
+import { savePdfMetaToStorage, getPdfMetaFromStorage } from "./localStorage.js";
 
 type PdfMeta = {
   name: string;
   projectName: string;
   projectNumber: string;
 };
-// const primaryColor = "#a816d9";
-// const primaryHover = "#8a11b5";
-// const textColour = "#630d80";
+
 const COLORS = {
-  brandDark: [99, 13, 128] as const, // dark blue
-  brandLight: [220, 200, 235] as const, // light blue banner
+  brandDark: [99, 13, 128] as const,
+  brandLight: [220, 200, 235] as const,
   textDark: [20, 40, 55] as const,
   grid: [210, 220, 230] as const,
   boxBg: [245, 248, 251] as const,
@@ -74,10 +73,15 @@ const ExportProductenPdfButton: React.FC = () => {
   const { model } = useForm<any>();
 
   const [open, setOpen] = useState(false);
-  const [meta, setMeta] = useState<PdfMeta>({
-    name: "",
-    projectName: "",
-    projectNumber: "",
+
+  // Initialize from localStorage
+  const [meta, setMeta] = useState<PdfMeta>(() => {
+    const stored = getPdfMetaFromStorage();
+    return {
+      name: stored?.name || "",
+      projectName: stored?.projectName || "",
+      projectNumber: stored?.projectNumber || "",
+    };
   });
 
   const errors = useMemo(() => {
@@ -90,7 +94,19 @@ const ExportProductenPdfButton: React.FC = () => {
 
   const canGenerate = Object.keys(errors).length === 0;
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    // Load from localStorage when opening
+    const stored = getPdfMetaFromStorage();
+    if (stored) {
+      setMeta({
+        name: stored.name,
+        projectName: stored.projectName,
+        projectNumber: stored.projectNumber,
+      });
+    }
+    setOpen(true);
+  };
+
   const handleClose = () => setOpen(false);
 
   const generatePdf = (pdfMeta: PdfMeta) => {
@@ -116,7 +132,7 @@ const ExportProductenPdfButton: React.FC = () => {
 
       const n = Number(eenheid);
       if (Number.isFinite(n)) totaalCO2credits += n;
-      
+
       return [
         String(index + 1),
         item.elements || "-",
@@ -218,7 +234,6 @@ const ExportProductenPdfButton: React.FC = () => {
 
     // --- Main table ---
     const tableStartY = kpiY + 30;
-
 
     autoTable(doc, {
       startY: tableStartY,
@@ -326,6 +341,14 @@ const ExportProductenPdfButton: React.FC = () => {
 
   const handleConfirmGenerate = () => {
     if (!canGenerate) return;
+
+    // Save to localStorage
+    savePdfMetaToStorage({
+      name: meta.name,
+      projectName: meta.projectName,
+      projectNumber: meta.projectNumber,
+    });
+
     setOpen(false);
     generatePdf(meta);
   };
@@ -348,6 +371,7 @@ const ExportProductenPdfButton: React.FC = () => {
               label="Naam"
               value={meta.name}
               onChange={(e) => setMeta((m) => ({ ...m, name: e.target.value }))}
+              error={!!errors.name}
               helperText={errors.name}
               autoFocus
               fullWidth
@@ -356,6 +380,7 @@ const ExportProductenPdfButton: React.FC = () => {
               label="Projectnaam"
               value={meta.projectName}
               onChange={(e) => setMeta((m) => ({ ...m, projectName: e.target.value }))}
+              error={!!errors.projectName}
               helperText={errors.projectName}
               fullWidth
             />
@@ -363,6 +388,7 @@ const ExportProductenPdfButton: React.FC = () => {
               label="Projectnummer"
               value={meta.projectNumber}
               onChange={(e) => setMeta((m) => ({ ...m, projectNumber: e.target.value }))}
+              error={!!errors.projectNumber}
               helperText={errors.projectNumber}
               fullWidth
             />

@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box } from "@mui/material";
 import { TextField, NumField, SelectField } from "uniforms-mui";
+import { useForm } from "uniforms";
 import type { FormModel } from "../../forms/types";
+import { getPdfMetaFromStorage } from "../../utils/localStorage";
 
 const bouwFasen = [
   "Schetsontwerp",
@@ -11,6 +13,36 @@ const bouwFasen = [
 ] as const;
 
 export function ProjectplanFields({ model }: { model: FormModel }) {
+  const { onChange } = useForm<FormModel>();
+
+  // Prefill from localStorage when component mounts
+  useEffect(() => {
+    const stored = getPdfMetaFromStorage();
+
+    if (stored) {
+      // Only prefill if fields are empty
+      if (!model.projectplanNaam && stored.name) {
+        onChange("projectplanNaam", stored.name);
+      }
+      if (!model.projectplanTitel && stored.projectName) {
+        onChange("projectplanTitel", stored.projectName);
+      }
+      if (!model.projectplanProjectnummer && stored.projectNumber) {
+        onChange("projectplanProjectnummer", stored.projectNumber);
+      }
+    }
+
+    // Prefill vloeroppervlak from aantalm22 if available
+    if (model.aantalm22 && !model.projectplanVloeroppervlak) {
+      onChange("projectplanVloeroppervlak", model.aantalm22);
+    }
+
+    // Prefill bouwfase from prescanFase2 if available
+    if (model.prescanFase2 && !model.projectplanBouwfase) {
+      onChange("projectplanBouwfase", model.prescanFase2);
+    }
+  }, []); // Run only once when component mounts
+
   return (
     <Box sx={{ display: "grid", gap: 2 }}>
       <TextField
