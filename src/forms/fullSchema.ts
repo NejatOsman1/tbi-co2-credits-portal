@@ -14,8 +14,6 @@ import {
 
 // Compose the full shape from partial schemas
 export const FullSchema = z.object({
-
-
   prescanFase2: prescanSchema2.shape.prescanFase2.optional(),
   prescanFinishTimeProject2: prescanSchema2.shape.prescanFinishTimeProject2,
 
@@ -26,8 +24,14 @@ export const FullSchema = z.object({
   oncraScore: oncraResultSchema.shape.oncraScore.optional(),
   oncraOpmerking: oncraResultSchema.shape.oncraOpmerking.optional(),
 
+  // ✅ Add all projectplan fields
   projectplanTitel: projectplanSchema.shape.projectplanTitel.optional(),
   projectplanBeschrijving: projectplanSchema.shape.projectplanBeschrijving.optional(),
+  projectplanNaam: projectplanSchema.shape.projectplanNaam.optional(),
+  projectplanEmail: projectplanSchema.shape.projectplanEmail.optional(),
+  projectplanVloeroppervlak: projectplanSchema.shape.projectplanVloeroppervlak.optional(),
+  projectplanProjectnummer: projectplanSchema.shape.projectplanProjectnummer.optional(),
+  projectplanBouwfase: projectplanSchema.shape.projectplanBouwfase.optional(),
 
   bewijsLinks: bewijsSchema.shape.bewijsLinks.optional(),
 

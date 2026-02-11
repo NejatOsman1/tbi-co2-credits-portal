@@ -13,7 +13,7 @@ import {
 } from "../features/validation";
 
 export type FieldKey = keyof FormModel;
-export type RenderKey = "quickProducts" | "prescanQuestions" | "prescanQuestions2" | "intro-waarom" | "intro-hoe";
+export type RenderKey = "quickProducts" | "prescanQuestions" | "prescanQuestions2" | "intro-waarom" | "intro-hoe" | "projectplanFields";
 
 export type SubstepDef = {
   key: string;
@@ -79,13 +79,13 @@ export const steps: StepDef[] = [
         zod: requireAtLeastOneQuickItem,
         render: "quickProducts",
       },
-      {
-        key: "oncra-result",
-        label: "Oncra scan resultaat",
-        description: "Vul (dummy) Oncra scan resultaten in.",
-        fields: ["oncraScore", "oncraOpmerking"],
-        zod: oncraResultSchema,
-      },
+      // {
+      //   key: "oncra-result",
+      //   label: "Oncra scan resultaat",
+      //   description: "Vul (dummy) Oncra scan resultaten in.",
+      //   fields: ["oncraScore", "oncraOpmerking"],
+      //   zod: oncraResultSchema,
+      // },
     ],
   },
   {
@@ -95,9 +95,18 @@ export const steps: StepDef[] = [
       {
         key: "projectplan",
         label: "Projectplan template invullen",
-        description: "Vul het projectplan (dummy) in.",
-        fields: ["projectplanTitel", "projectplanBeschrijving"],
+        description: "Vul het projectplan in.",
+        fields: [
+          "projectplanTitel",
+          "projectplanNaam",
+          "projectplanEmail",
+          "projectplanVloeroppervlak",
+          "projectplanProjectnummer",
+          "projectplanBouwfase",
+          "projectplanBeschrijving"
+        ],
         zod: projectplanSchema,
+        render: "projectplanFields",
       },
       {
         key: "bewijsstukken",

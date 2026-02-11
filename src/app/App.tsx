@@ -12,7 +12,7 @@ import { PrescanQuestions2 } from "../features/prescan2";
 import { QuickScanFields } from "../features/quick-scan";
 import { Review } from "../features/review";
 import { makeStepBridge } from "../forms/makeStepBridge";
-
+import { ProjectplanFields } from "../features/validation";
 
 export default function App(): JSX.Element {
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -31,6 +31,13 @@ export default function App(): JSX.Element {
         eenheid: "",
       },
     ],
+    projectplanTitel: "",
+    projectplanBeschrijving: "",
+    projectplanNaam: "",
+    projectplanEmail: "",
+    projectplanVloeroppervlak: undefined,
+    projectplanProjectnummer: "",
+    projectplanBouwfase: undefined,
   });
 
   // Add this ref to track if quickScan has been initialized
@@ -132,6 +139,8 @@ export default function App(): JSX.Element {
       <PrescanQuestions2 model={model} />
     ) : currentSub.render === "quickProducts" ? (
       <QuickScanFields />
+    ) : currentSub.render === "projectplanFields" ? ( // ✅ Add this
+      <ProjectplanFields model={model} />
     ) : isFinalOverview ? (
       <Review model={model} />
     ) : (
