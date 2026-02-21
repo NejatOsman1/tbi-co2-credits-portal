@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import { useMemo, useState, useRef } from "react";
 import { Box, Button, Container, Divider, Paper, Typography } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { AutoFields, AutoForm, ErrorsField } from "uniforms-mui";
@@ -13,6 +13,7 @@ import { QuickScanFields } from "../features/quick-scan";
 import { Review } from "../features/review";
 import { makeStepBridge } from "../forms/makeStepBridge";
 import { ProjectplanFields } from "../features/validation";
+import { useSyncQuickScanFromPreScanElements } from "../features/quick-scan/useSyncQuickScanFromPreScan";
 
 export default function App(): JSX.Element {
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -40,52 +41,10 @@ export default function App(): JSX.Element {
     projectplanBouwfase: undefined,
   });
 
-  // Add this ref to track if quickScan has been initialized
   const quickScanInitialized = useRef(false);
 
-  useEffect(() => {
-    setModel((prev) => {
-      const src = prev.structuralElements ?? [];
-      const prevQS = prev.quickScan ?? [];
-
-      // If no structural elements, do nothing
-      if (src.length === 0) return prev;
-
-      // Check if we need to update
-      const lengthChanged = prevQS.length !== src.length;
-
-      // Check if any element/productType in structuralElements differs from quickScan
-      const hasNewData = src.some((row, i) => {
-        const existing = prevQS[i];
-        return (
-          row?.elements && !existing?.element ||
-          row?.productTypes && !existing?.productType
-        );
-      });
-
-      if (!quickScanInitialized.current || lengthChanged || hasNewData) {
-        const nextQS = src.map((row, i) => {
-          const existing = prevQS[i];
-
-          return {
-            // Prefill from structural elements only if empty
-            element: existing?.element || row?.elements || "",
-            productType: existing?.productType || row?.productTypes || "",
-            fabrikant: existing?.fabrikant ?? "",
-            productCategory: existing?.productCategory ?? "",
-            aantal: existing?.aantal ?? 1,
-            eenheid: existing?.eenheid ?? "",
-          };
-        });
-
-        quickScanInitialized.current = true;
-        return { ...prev, quickScan: nextQS };
-      }
-
-      return prev;
-    });
-  }, [model.structuralElements]); // Watch the entire array, not just length// ✅ Only depend on structuralElements
-
+  useSyncQuickScanFromPreScanElements(model.structuralElements, setModel, quickScanInitialized);
+  
 
   const currentStep = steps[activeStep];
   const currentSub = currentStep.substeps[activeSub];
