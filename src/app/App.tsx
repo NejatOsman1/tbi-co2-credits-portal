@@ -13,7 +13,7 @@ import { QuickScanFields } from "../features/quick-scan";
 import { Review } from "../features/review";
 import { makeStepBridge } from "../forms/makeStepBridge";
 import { ProjectplanFields } from "../features/validation";
-import { useSyncQuickScanFromPreScanElements } from "../features/quick-scan/useSyncQuickScanFromPreScan";
+import { useSyncQuickScanFromPreScanElements } from "../features/quick-scan/useSyncQuickScanFromPrescan";
 import { BewijsDocuments } from "../features/validation/BewijsDocuments.js";
 
 export default function App(): JSX.Element {
@@ -92,7 +92,7 @@ export default function App(): JSX.Element {
 
   const ContentFields =
     currentSub.render === "intro-waarom" ? (
-      <BewijsDocuments />
+      <Intro />
     ) : currentSub.render === "intro-hoe" ? (
       <IntroHow />
     ) : currentSub.render === "prescanQuestions2" ? (
