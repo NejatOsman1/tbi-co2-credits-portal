@@ -13,7 +13,7 @@ import {
 } from "../features/validation";
 
 export type FieldKey = keyof FormModel;
-export type RenderKey = "quickProducts" | "prescanQuestions" | "prescanQuestions2" | "intro-waarom" | "intro-hoe" | "projectplanFields";
+export type RenderKey = "quickProducts" | "prescanQuestions" | "prescanQuestions2" | "intro-waarom" | "intro-hoe" | "projectplanFields" | "bewijsDocuments";
 
 export type SubstepDef = {
   key: string;
@@ -79,13 +79,7 @@ export const steps: StepDef[] = [
         zod: requireAtLeastOneQuickItem,
         render: "quickProducts",
       },
-      // {
-      //   key: "oncra-result",
-      //   label: "Oncra scan resultaat",
-      //   description: "Vul (dummy) Oncra scan resultaten in.",
-      //   fields: ["oncraScore", "oncraOpmerking"],
-      //   zod: oncraResultSchema,
-      // },
+
     ],
   },
   {
@@ -109,11 +103,12 @@ export const steps: StepDef[] = [
         render: "projectplanFields",
       },
       {
-        key: "bewijsstukken",
+        key: "bewijsDocuments",
         label: "Upload bewijsstukken",
-        description: "Voeg bewijslinks toe (dummy).",
-        fields: ["bewijsLinks"],
-        zod: bewijsSchema,
+        description: "Voeg hier de aangegeven bewijsstukken op ter validatie van de ",
+        fields: [],
+        zod: null,
+        render: "bewijsDocuments"
       },
       {
         key: "validatie-result",

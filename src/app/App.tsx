@@ -14,6 +14,7 @@ import { Review } from "../features/review";
 import { makeStepBridge } from "../forms/makeStepBridge";
 import { ProjectplanFields } from "../features/validation";
 import { useSyncQuickScanFromPreScanElements } from "../features/quick-scan/useSyncQuickScanFromPreScan";
+import { BewijsDocuments } from "../features/validation/BewijsDocuments.js";
 
 export default function App(): JSX.Element {
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -42,7 +43,7 @@ export default function App(): JSX.Element {
   });
 
   const quickScanInitialized = useRef(false);
-
+  
   useSyncQuickScanFromPreScanElements(model.structuralElements, setModel, quickScanInitialized);
   
 
@@ -91,7 +92,7 @@ export default function App(): JSX.Element {
 
   const ContentFields =
     currentSub.render === "intro-waarom" ? (
-      <Intro />
+      <BewijsDocuments />
     ) : currentSub.render === "intro-hoe" ? (
       <IntroHow />
     ) : currentSub.render === "prescanQuestions2" ? (
@@ -100,7 +101,10 @@ export default function App(): JSX.Element {
       <QuickScanFields />
     ) : currentSub.render === "projectplanFields" ? ( // ✅ Add this
       <ProjectplanFields model={model} />
-    ) : isFinalOverview ? (
+    ) : currentSub.render === "bewijsDocuments" ? (
+      <BewijsDocuments />
+    )
+    : isFinalOverview ? (
       <Review model={model} />
     ) : (
       <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 2 }}>
@@ -132,7 +136,7 @@ export default function App(): JSX.Element {
                 onChangeModel={setModel}
                 onSubmit={handleSubmit}
                 noValidate={false}
-              >
+              >                
                 {ContentFields}
 
                 <ErrorsField />

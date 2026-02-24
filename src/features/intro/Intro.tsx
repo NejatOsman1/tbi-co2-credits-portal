@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 
-export function Intro({ onStart }: { onStart: () => void }) {
+export function Intro() {
   return (
     <Box sx={{ display: "grid", gap: 2 }}>
 
