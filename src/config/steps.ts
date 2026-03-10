@@ -106,8 +106,8 @@ export const steps: StepDef[] = [
         key: "bewijsDocuments",
         label: "Upload bewijsstukken",
         description: "Voeg hier de aangegeven bewijsstukken op ter validatie van de ",
-        fields: [],
-        zod: null,
+        fields: ["bewijsLinks"],
+        zod: bewijsSchema,
         render: "bewijsDocuments"
       },
       {

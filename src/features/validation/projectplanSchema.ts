@@ -15,4 +15,5 @@ export const projectplanSchema = z.object({
   projectplanVloeroppervlak: z.number().positive("Vul een positief getal in"),
   projectplanProjectnummer: z.string().min(1, "Projectnummer is verplicht"),
   projectplanBouwfase: z.enum(bouwFasen, { required_error: "Kies een bouwfase" }),
+  projectplanKvkNummer: z.number().min(1, "Voer uw KVK nummer in"),
 });

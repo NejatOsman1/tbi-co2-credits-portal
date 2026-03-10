@@ -32,7 +32,7 @@ export function QuickScanFields() {
                     alignItems: "center",
                   }}
                 >
-                  {/* ✅ NEW read-only column */}
+                
                   <SelectField
                     name="element"
                     label="Element"

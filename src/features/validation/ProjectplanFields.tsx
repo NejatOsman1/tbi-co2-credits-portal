@@ -77,6 +77,12 @@ export function ProjectplanFields({ model }: { model: FormModel }) {
         fullWidth
       />
 
+      <NumField
+        name="projectplanKvkNummer"
+        label="KVK nummer"
+        fullWidth
+      />
+
       <SelectField
         name="projectplanBouwfase"
         label="Bouwfase"
