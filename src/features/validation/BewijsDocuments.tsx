@@ -46,7 +46,7 @@ export function BewijsDocuments() {
   return (
     <Box sx={{ display: "grid", gap: 2 }}>
       <Typography sx={{ mt: 1, fontSize: "0.9rem" }}>
-        Upload hieronder de benodigde bewijsstukken voor uw project.
+        Upload hieronder de bouwvergunning en MilieuPrestatieGebouwen-rapport (MPG-rapport).
       </Typography>
       {/* Upload buttons */}
       {buttons.map(({ key, label, tooltip }) => (
@@ -85,7 +85,7 @@ export function BewijsDocuments() {
         </Link>.
       </Typography>
       <Typography variant="subtitle2" sx={{ mb: 1, fontSize: "0.9rem" }}>
-        Upload per biobased product hieronder de aankoopfacturen of soortgelijk bewijs dat CO₂-vastlegging is gerealiseerd zoals berekend.
+        Indiend al beschikbaar in deze fase upload per biobased product hieronder de aankoopfacturen of soortgelijk bewijs.
       </Typography>
 
     <Box

@@ -198,7 +198,7 @@ const ExportProjectplanPdfButton: React.FC = () => {
         2: { cellWidth: "auto" },
         3: { cellWidth: 24, halign: "right" },
         4: { cellWidth: 20, halign: "right" },
-        5: { cellWidth: "auto" },
+        5: { cellWidth: 55 },
       },
     });
 
