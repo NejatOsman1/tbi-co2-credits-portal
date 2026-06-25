@@ -1,7 +1,6 @@
 import type { ProductEntry } from "./productCatalog";
 
 export const houtGeenEpd: ProductEntry[] = [
-  [
     { type: "Constructie: Hout", manufacturer: "Hout (geen EPD)", product: "Abachi (Triplchiton scleroxylon)", carbon: -175.5, unit: "m3" },
     { type: "Constructie: CLT or LVL", manufacturer: "Hout (geen EPD)", product: "Abachi (Triplchiton scleroxylon)", carbon: -175.5, unit: "m3" },
     { type: "Constructie: Hout", manufacturer: "Hout (geen EPD)", product: "Abuirana (Pouteria spp)", carbon: -495, unit: "m3" },
@@ -115,6 +114,4 @@ export const houtGeenEpd: ProductEntry[] = [
     { type: "Constructie: Hout", manufacturer: "Hout (geen EPD)", product: "Witte spar (Picea glauca (Moench) Voss)", carbon: -214.1575, unit: "m3" },
     { type: "Constructie: Hout", manufacturer: "Hout (geen EPD)", product: "Wilg (Salix L.)", carbon: -203.5575, unit: "m3" },
     { type: "Constructie: Hout", manufacturer: "Hout (geen EPD)", product: "Gele berk (Betula alleghaniesis Britton)", carbon: -319.263, unit: "m3" },
-  ]
-
 ];

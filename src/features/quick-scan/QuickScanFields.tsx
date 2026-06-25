@@ -20,7 +20,7 @@ export function QuickScanFields() {
   return (
     <Box>
       <Typography variant="subtitle2" sx={{ mb: 1 }}>
-        Op basis van het gebruik van de bio based materialen krijgt u snel inzicht in het aantal CO2 credits die u kunt genereren voor uw project.
+        Op basis van het gebruik van de biobased materialen krijgt u snel inzicht in het aantal CO2 credits die u kunt genereren voor uw project.
       </Typography>
       <ThemeProvider theme={smallFormTheme}>
             <ListField name="quickScan" label="">
