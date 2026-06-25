@@ -67,6 +67,8 @@ export const ENTRIES: ProductEntry[] = [
   { type: "Constructie: Spaanplaat", manufacturer: "LK Systems AB", product: "LK Vloerverwarming plaat", carbon: -1.12, unit: "kg" },
   { type: "Constructie: Spaanplaat", manufacturer: "SWISS KRONO Group", product: "OSB", carbon: -890.0, unit: "m3" },
   { type: "Constructie: Spaanplaat", manufacturer: "UAB VMG Lignum constructions", product: "Dragende constructie spaanplaten", carbon: -1100.0, unit: "m3" },
+  { type: "Constructie: Spaanplaat", manufacturer: "Unilin Sanipan spaanplaat", product: "Dragende constructie spaanplaten", carbon: -1100.0, unit: "m3" },
+
 
   { type: "Isolatie: gipsvezel", manufacturer: "James Hardie Europe GmbH", product: "fermacell® gipsvezelplaat", carbon: -3.58, unit: "m3" },
 
