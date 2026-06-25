@@ -11,7 +11,7 @@ import ExportProjectplanPdfButton, { generateProjectplanPdf } from "../../utils/
 type FileKey = "biomaterialen" | "bouwkundigRapport";
 
 const biomaterialenOptions = [
-  "Material lijst",
+  "Materiaal lijst",
   "MPG rapport",
   "Building informamtion model (BIM)",
 ];
@@ -114,7 +114,7 @@ export function BewijsDocuments() {
       
       {/* Biomaterialen dropdown + upload */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <FormControl size="small" sx={{ minWidth: 200 }}>
+        <FormControl size="small" sx={{ minWidth: 240 }}>
           <InputLabel id="biomaterialen-label">Gebruikte biomaterialen</InputLabel>
           <Select
             labelId="biomaterialen-label"
@@ -152,7 +152,7 @@ export function BewijsDocuments() {
 
       {/* Building lifespan dropdown + upload */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <FormControl size="small" sx={{ minWidth: 200 }}>
+        <FormControl size="small" sx={{ minWidth: 240 }}>
           <InputLabel id="building-lifespan-label">Gebouwgegevens</InputLabel>
           <Select
             labelId="building-lifespan-label"
