@@ -49,7 +49,7 @@ export const generateProjectplanPdf = (model: any): Blob => {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(...COLORS.textDark);
-  doc.text("CO2 Credits Quickscan", marginX, 22);
+  doc.text("Oncra Project Design Document", marginX, 22);
 
   // --- Meta grid ---
   const vloeroppervlak = model.projectplanVloeroppervlak ?? "Onbekend";
@@ -182,13 +182,8 @@ export const generateProjectplanPdf = (model: any): Blob => {
     startY: tableStartY + 4,
     margin: { left: marginX, right: marginX },
     tableWidth: fullTableW,
-    head: [["Nr.", "Fabrikant", "Productcategorie", "Hoeveelheid", "Eenheid", "t CO₂e", "EPD-link"]],
+    head: [["Nr.", "Fabrikant", "Productcategorie", "Hoeveelheid", "Eenheid", "ton CO2e", "EPD-link"]],
     body: tableData,
-    foot: [
-      ["", "", "", "", "Subtotaal materialen:", formatTonCO2e(sumRowCO2), ""],
-      ["", "", "", "", "Baseline (vloeropp.):", formatTonCO2e(-baseline), ""],
-      ["", "", "", "", "Totaal t CO₂e:", formatTonCO2e(totalCO2), ""],
-    ],
     theme: "grid",
     styles: {
       fontSize: 9,
@@ -202,11 +197,6 @@ export const generateProjectplanPdf = (model: any): Blob => {
       textColor: 255,
       fontStyle: "bold",
     },
-    footStyles: {
-      fillColor: COLORS.boxBg as any,
-      textColor: COLORS.textDark as any,
-      fontStyle: "bold",
-    },
     columnStyles: {
       0: { cellWidth: 10, halign: "center" },
       1: { cellWidth: "auto" },
@@ -215,6 +205,38 @@ export const generateProjectplanPdf = (model: any): Blob => {
       4: { cellWidth: 18, halign: "right" },
       5: { cellWidth: 22, halign: "right" },
       6: { cellWidth: 45 },
+    },
+  });
+
+  // --- Summary table ---
+  const afterMaterialsY = (doc as any).lastAutoTable?.finalY ?? tableStartY + 50;
+  
+  autoTable(doc, {
+    startY: afterMaterialsY + 8,
+    margin: { left: marginX + fullTableW - 80, right: marginX },
+    tableWidth: 80,
+    body: [
+      ["Subtotaal materialen:", formatTonCO2e(sumRowCO2)],
+      ["Baseline (vloeropp.):", formatTonCO2e(-baseline)],
+      ["Totaal ton CO2 e:", formatTonCO2e(totalCO2)],
+    ],
+    theme: "grid",
+    styles: {
+      fontSize: 9,
+      cellPadding: 2.2,
+      lineColor: COLORS.grid as any,
+      lineWidth: 0.2,
+      textColor: COLORS.textDark as any,
+    },
+    columnStyles: {
+      0: { fontStyle: "bold", cellWidth: 50 },
+      1: { halign: "right", cellWidth: 30 },
+    },
+    didParseCell: (data: any) => {
+      if (data.row.index === 2) {
+        data.cell.styles.fillColor = COLORS.boxBg;
+        data.cell.styles.fontStyle = "bold";
+      }
     },
   });
 
@@ -254,8 +276,8 @@ const ExportProjectplanPdfButton: React.FC = () => {
 
   return (
     <>
-      <Button variant="outlined" color="success" onClick={handleConfirmGenerate} sx={{ mt: 2 }}>
-        Export naar PDF
+      <Button variant="outlined" color="success" onClick={handleConfirmGenerate} sx={{ fontSize: "0.85rem", py: 1, minWidth: 260 }}>
+        Export projectplan naar PDF
       </Button>
 
    </>

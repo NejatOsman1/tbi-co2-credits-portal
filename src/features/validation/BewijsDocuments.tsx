@@ -99,11 +99,11 @@ export function BewijsDocuments() {
 
     // Open email with prefilled content
     const allFileNames = ["projectplan-quickscan.pdf", ...allFiles.map((f) => f.name)];
-    const subject = encodeURIComponent("CO2 Credits - Bewijsdocumenten");
+    const subject = encodeURIComponent("TBI CO2 Credits - Certificering projectplan en bewijsdocumenten");
     const body = encodeURIComponent(
-      `Beste,\n\nHierbij stuur ik de bewijsdocumenten voor het CO2 credits project.\n\nBijgevoegde documenten (${allFileNames.length} bestanden):\n${allFileNames.map((name) => "- " + name).join("\n")}\n\nDe documenten zijn gedownload als ZIP-bestand. Voeg het ZIP-bestand als bijlage toe aan deze email.\n\nMet vriendelijke groet`
+      `Beste Oncra,\n\nGraag willen wij ons project laten certificeren. Hierbij stuur ik de projectplan data en bijbehorende bewijsdocumenten voor het CO2 credits project.\n\nBijgevoegde documenten (${allFileNames.length} bestanden):\n${allFileNames.map((name) => "- " + name).join("\n")}\n\nDe documenten zijn gedownload als ZIP-bestand. Voeg het ZIP-bestand als bijlage toe aan deze email.\n\nMet vriendelijke groet`
     );
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:act@oncra.org?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -261,12 +261,20 @@ export function BewijsDocuments() {
         ))}
       </Box>
       
-      <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+      <Typography sx={{ mt: 3, mb: 1, fontSize: "0.9rem" }}>
+        Gefeliciteerd, uw project is nu gereed om ingediend te worden bij ONCRA. Door op onderstaande Download & Email projectplan te klikken wordt voor u een email aangemaakt en de benodigde bewijsstukken als een zipbestand gedownload. Het zip bestand moet u toevoegen aan de email en vervolgens versturen.
+      </Typography>
+
+      <Typography sx={{ mt: 1, mb: 1, fontSize: "0.9rem" }}>
+        U kunt eerst ook het projectplan exporteren naar pdf ter controle en vervolgens zelf indienen bij ONCRA. Klik hiervoor op de knop "Export projectplan naar PDF" hieronder.
+      </Typography>
+
+      <Box sx={{ display: "flex", gap: 2, mt: 2, justifyContent: "center" }}>
         <Button
           variant="contained"
           startIcon={<EmailIcon />}
           onClick={handleEmailAndDownload}
-          sx={{ fontSize: "0.85rem", py: 1 }}
+          sx={{ fontSize: "0.85rem", py: 1, minWidth: 260 }}
         >
           Download & E-mail Projectplan
         </Button>

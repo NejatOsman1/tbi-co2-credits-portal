@@ -24,7 +24,7 @@ export const FullSchema = z.object({
   oncraScore: oncraResultSchema.shape.oncraScore.optional(),
   oncraOpmerking: oncraResultSchema.shape.oncraOpmerking.optional(),
 
-  // ✅ Add all projectplan fields
+
   projectplanTitel: projectplanSchema.shape.projectplanTitel.optional(),
   projectplanBeschrijving: projectplanSchema.shape.projectplanBeschrijving.optional(),
   projectplanNaam: projectplanSchema.shape.projectplanNaam.optional(),
@@ -35,7 +35,7 @@ export const FullSchema = z.object({
 
   bewijsLinks: bewijsSchema.shape.bewijsLinks.optional(),
 
-  validatieGoedgekeurd: validatieResultSchema.shape.validatieGoedgekeurd.optional(),
+  validatieGoedgekeurd: z.boolean().optional(),
   validatieToelichting: validatieResultSchema.shape.validatieToelichting.optional(),
 
   fotoUrls: publiceerFotoSchema.shape.fotoUrls.optional(),

@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import { NumField } from "uniforms-mui";
 import { useField } from "uniforms";
 
@@ -8,8 +8,16 @@ export function AantalField() {
   if (eenheid === "m3" || !eenheid) {
     return (
       <Box sx={{ display: "flex", gap: 1 }}>
-        <NumField name="aantalM" label="Dikte (m)" decimal={true} fullWidth />
-        <NumField name="aantalM2" label="Oppervlakte (m²)" decimal={true} fullWidth />
+        <Tooltip title="Voer hier de dikte van het gebruikte materiaal in" arrow placement="top">
+          <Box>
+            <NumField name="aantalM" label="Dikte (m)" decimal={true} sx={{ minWidth: 120 }} />
+          </Box>
+        </Tooltip>
+        <Tooltip title="Voer hier de totaal gebruikte oppervlakte van het materiaal in." arrow placement="top">
+          <Box>
+            <NumField name="aantalM2" label="Oppervlakte (m²)" decimal={true} sx={{ minWidth: 120 }} />
+          </Box>
+        </Tooltip>
       </Box>
     );
   }
