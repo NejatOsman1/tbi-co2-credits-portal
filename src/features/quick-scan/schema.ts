@@ -7,7 +7,7 @@ const productTypes = [
   "Constructie: Spaanplaat",
   "Constructie: CLT or LVL",
   "Constructie: Bamboo",
-  "Isolatie: houtvezels",
+  "Isolatie: HSB met houtvezels",
   "Isolatie: stro",
   "Isolatie: hemp or flax",
   "Composiet: wood-based",
@@ -30,7 +30,9 @@ export const quickScanRow = z.object({
   productType: z.enum(productTypes).optional(), // Now editable with proper enum
   fabrikant: z.string().min(1, "Kies een fabrikant"),
   productCategory: z.string().min(1, "Kies een product"),
-  aantal: z.number().positive({ message: "Voer een positief geval in" }),
+  aantal: z.number().positive({ message: "Voer een positief geval in" }).optional(),
+  aantalM: z.number().positive({ message: "Voer een positief geval in" }).optional(),
+  aantalM2: z.number().positive({ message: "Voer een positief geval in" }).optional(),
   eenheid: z.string().optional()
 });
 
@@ -45,6 +47,29 @@ export const requireAtLeastOneQuickItem = z
           code: z.ZodIssueCode.custom,
           path: ["quickScan", idx, "productCategory"],
           message: "Product hoort niet bij de gekozen fabrikant",
+        });
+      }
+      // Validate quantity fields based on unit
+      if (row.eenheid === "m3") {
+        if (row.aantalM === undefined) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["quickScan", idx, "aantalM"],
+            message: "Vul de dikte in (m)",
+          });
+        }
+        if (row.aantalM2 === undefined) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["quickScan", idx, "aantalM2"],
+            message: "Vul het oppervlak in (m²)",
+          });
+        }
+      } else if (row.aantal === undefined) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["quickScan", idx, "aantal"],
+          message: "Voer een positief geval in",
         });
       }
     });

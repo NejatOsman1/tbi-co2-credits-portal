@@ -158,7 +158,7 @@ const CalculatedEenheidField: React.FC = () => {
   const [{ value: elements }] = useField<string>("elements",{ initialValue: false });  
   const [{ value: productTypes }] = useField<string>("productTypes",{ initialValue: "" });
   const [{ value: aantal }] = useField<number>("aantal",{ initialValue: false });
- 
+
   const computedValue = useMemo(
     () => computeCO2Equivalent(elements, productTypes, aantal),
     [elements, productTypes, aantal]

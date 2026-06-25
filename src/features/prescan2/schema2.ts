@@ -9,7 +9,7 @@ export const productTypes = [
   "Constructie: Hout",
   "Constructie: Spaanplaat",
   "Constructie: CLT or LVL",
-  "Isolatie: houtvezels",
+  "Isolatie: HSB met houtvezels",
   "Isolatie: stro",
   "Isolatie: hemp or flax",
   "Composiet: wood-based",

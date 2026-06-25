@@ -13,6 +13,11 @@ export function AutoEenheidField() {
     [fabrikant, productCategory]
   );
 
+  // Don't render the visible field when unit is m3 (dimensions are shown separately)
+  if (nextUnit === "m3" || !nextUnit) {
+    return <HiddenField name="eenheid" value={nextUnit} />;
+  }
+
   return (
     <>
       <HiddenField name="eenheid" value={nextUnit || ""} />

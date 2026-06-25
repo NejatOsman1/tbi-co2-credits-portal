@@ -170,7 +170,7 @@ const ExportProductenPdfButton: React.FC = () => {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(...COLORS.textDark);
-    doc.text("CO2 Credits Quickscan", marginX, 22);
+    doc.text("CO2 Project plan data Oncra", marginX, 22);
 
     // --- Meta grid ---
     const metaRows = [

@@ -5,8 +5,18 @@ type QuickRow = {
   fabrikant?: string;
   productCategory?: string;
   aantal?: number;
+  aantalM?: number;
+  aantalM2?: number;
   eenheid?: string;
 };
+
+export function getQuantityForRow(row: QuickRow): number {
+  // When unit is m3, calculate quantity as m * m2
+  if (row.eenheid === "m3" && typeof row.aantalM === "number" && typeof row.aantalM2 === "number") {
+    return row.aantalM * row.aantalM2;
+  }
+  return typeof row.aantal === "number" && !Number.isNaN(row.aantal) ? row.aantal : 1;
+}
 
 export function getCarbonForRow(row: QuickRow): number | undefined {
   if (!row?.fabrikant || !row?.productCategory) return undefined;
@@ -35,7 +45,8 @@ export function calcTotalTonCO2e(rows: QuickRow[] = [], aantalm2: number): numbe
     const carbon = getCarbonForRow(row);
 
     if (typeof carbon === "number") {
-      sum += calcTonCO2e(carbon, row.aantal,aantalm2);
+      const qty = getQuantityForRow(row);
+      sum += calcTonCO2e(carbon, qty, aantalm2);
     }
 
     return sum;

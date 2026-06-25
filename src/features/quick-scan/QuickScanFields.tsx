@@ -5,6 +5,7 @@ import { calcTotalTonCO2e, formatTonCO2e } from "../../utils/calculateCO2";
 import { FabrikantField } from "./fields/FabrikantField";
 import { ProductCategoryField } from "./fields/ProductCategoryField";
 import { AutoEenheidField } from "./fields/UnitField";
+import { AantalField } from "./fields/AantalField";
 import { smallFormTheme } from "../../app/theme.js";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -49,7 +50,7 @@ export function QuickScanFields() {
                   />
                   <FabrikantField />
                   <ProductCategoryField />
-                  <NumField name="aantal" label="Aantal" decimal={false} fullWidth />
+                  <AantalField />
                   <AutoEenheidField />
 
                   <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
