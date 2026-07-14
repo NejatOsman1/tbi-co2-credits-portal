@@ -13,7 +13,7 @@ import {
 } from "../features/validation";
 
 export type FieldKey = keyof FormModel;
-export type RenderKey = "quickProducts" | "prescanQuestions" | "prescanQuestions2" | "intro-waarom" | "intro-hoe" | "projectplanFields" | "bewijsDocuments";
+export type RenderKey = "quickProducts" | "prescanQuestions" | "prescanQuestions2" | "intro-waarom" | "intro-hoe" | "projectplanFields" | "bewijsDocuments" | "resultaatValidatie";
 
 export type SubstepDef = {
   key: string;
@@ -111,11 +111,12 @@ export const steps: StepDef[] = [
         render: "bewijsDocuments"
       },
       {
-        key: "validatie-result",
+        key: "resultaatValidatie",
         label: "Resultaat validatie Oncra",
         description: "Markeer validatie resultaat (dummy).",
-        fields: ["validatieGoedgekeurd", "validatieToelichting"],
-        zod: validatieResultSchema,
+        fields: [],
+        zod: null,
+        render: "resultaatValidatie"
       },
     ],
   },

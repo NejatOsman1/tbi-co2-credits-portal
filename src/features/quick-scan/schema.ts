@@ -4,7 +4,7 @@ import { productsByManufacturer } from "../../data/productCatalog";
 // Import these from your first schema or redefine them
 const productTypes = [
   "Constructie: Hout",
-  "Constructie: Spaanplaat",
+  "Constructie: OSB/Spaanplaat",
   "Constructie: CLT or LVL",
   "Constructie: Bamboo",
   "Isolatie: HSB met houtvezels",

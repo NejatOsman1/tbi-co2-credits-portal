@@ -157,6 +157,7 @@ export const generateProjectplanPdf = (model: any): Blob => {
       row.productCategory || "-",
       hoeveelheid != null && hoeveelheid > 0 ? `${hoeveelheid}` : "-",
       row.eenheid ?? "-",
+      typeof carbon === "number" ? carbon.toLocaleString("nl-NL") : "-",
       co2Value != null ? formatTonCO2e(co2Value) : "-",
       bewijsLinks[i] || "-",
     ];
@@ -182,7 +183,7 @@ export const generateProjectplanPdf = (model: any): Blob => {
     startY: tableStartY + 4,
     margin: { left: marginX, right: marginX },
     tableWidth: fullTableW,
-    head: [["Nr.", "Fabrikant", "Productcategorie", "Hoeveelheid", "Eenheid", "ton CO2e", "EPD-link"]],
+    head: [["Nr.", "Fabrikant", "Productcategorie", "Hoeveelheid", "Eenheid", "kg CO2/eenheid", "ton CO2e", "EPD-link"]],
     body: tableData,
     theme: "grid",
     styles: {
@@ -203,8 +204,9 @@ export const generateProjectplanPdf = (model: any): Blob => {
       2: { cellWidth: "auto" },
       3: { cellWidth: 22, halign: "right" },
       4: { cellWidth: 18, halign: "right" },
-      5: { cellWidth: 22, halign: "right" },
-      6: { cellWidth: 45 },
+      5: { cellWidth: 28, halign: "right" },
+      6: { cellWidth: 22, halign: "right" },
+      7: { cellWidth: 40 },
     },
   });
 

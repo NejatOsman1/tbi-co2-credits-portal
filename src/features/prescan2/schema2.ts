@@ -7,7 +7,7 @@ export const aantalm2 = ["Minder dan 100 m2", "Meer dan 100 m2"] as const;
 
 export const productTypes = [
   "Constructie: Hout",
-  "Constructie: Spaanplaat",
+  "Constructie: OSB/Spaanplaat",
   "Constructie: CLT or LVL",
   "Isolatie: HSB met houtvezels",
   "Isolatie: stro",

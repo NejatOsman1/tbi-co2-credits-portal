@@ -62,12 +62,12 @@ export const ENTRIES: ProductEntry[] = [
   { type: "Constructie: Hout", manufacturer: "UPM Timber", product: "Standaard en speciaal gezaagd hout", carbon: -786.0, unit: "m3" },
   { type: "Constructie: Hout", manufacturer: "Vudlande SIA", product: "Geschaafd gezaagd hout", carbon: -724.0, unit: "m3" },
 
-  { type: "Constructie: Spaanplaat", manufacturer: "Byggelit AB", product: "Spaanplaat P3, P5 en P7", carbon: -934.0, unit: "m3" },
-  { type: "Constructie: Spaanplaat", manufacturer: "Grigeo Baltwood UAB", product: "Geschilderde en ongeschilderde harde vezelplaat", carbon: -1600.0, unit: "m3" },
-  { type: "Constructie: Spaanplaat", manufacturer: "LK Systems AB", product: "LK Vloerverwarming plaat", carbon: -1.12, unit: "kg" },
-  { type: "Constructie: Spaanplaat", manufacturer: "SWISS KRONO Group", product: "OSB", carbon: -890.0, unit: "m3" },
-  { type: "Constructie: Spaanplaat", manufacturer: "UAB VMG Lignum constructions", product: "Dragende constructie spaanplaten", carbon: -1100.0, unit: "m3" },
-  { type: "Constructie: Spaanplaat", manufacturer: "Unilin Sanipan spaanplaat", product: "Dragende constructie spaanplaten", carbon: -1100.0, unit: "m3" },
+  { type: "Constructie: OSB/Spaanplaat", manufacturer: "Byggelit AB", product: "Spaanplaat P3, P5 en P7", carbon: -934.0, unit: "m3" },
+  { type: "Constructie: OSB/Spaanplaat", manufacturer: "Grigeo Baltwood UAB", product: "Geschilderde en ongeschilderde harde vezelplaat", carbon: -1600.0, unit: "m3" },
+  { type: "Constructie: OSB/Spaanplaat", manufacturer: "LK Systems AB", product: "LK Vloerverwarming plaat", carbon: -1.12, unit: "kg" },
+  { type: "Constructie: OSB/Spaanplaat", manufacturer: "SWISS KRONO Group", product: "OSB", carbon: -890.0, unit: "m3" },
+  { type: "Constructie: OSB/Spaanplaat", manufacturer: "UAB VMG Lignum constructions", product: "Dragende constructie spaanplaten", carbon: -1100.0, unit: "m3" },
+  { type: "Constructie: OSB/Spaanplaat", manufacturer: "Unilin Sanipan spaanplaat", product: "Dragende constructie spaanplaten", carbon: -1100.0, unit: "m3" },
 
 
   { type: "Isolatie: gipsvezel", manufacturer: "James Hardie Europe GmbH", product: "fermacell® gipsvezelplaat", carbon: -3.58, unit: "m3" },
@@ -82,7 +82,7 @@ export const ENTRIES: ProductEntry[] = [
   { type: "Isolatie: HSB met houtvezels", manufacturer: "Ekovilla Oy", product: "Plaat cellulose thermische isolatie", carbon: -1.91, unit: "m2" },
   { type: "Isolatie: HSB met houtvezels", manufacturer: "GUTEX Holzfaserplattenwerk H. Henselmann GmbH + Co KG", product: "Thermoflex houtvezel isolatie", carbon: -198.4, unit: "m3" },
 
-  { type: "Isolatie: stro", manufacturer: "Bioblow", product: "Bioblow inblaasstro isolatie", carbon: -198.4, unit: "m3" },
+  { type: "Isolatie: stro", manufacturer: "Bioblow", product: "Bioblow inblaasstro isolatie", carbon: -175.4, unit: "m3" },
   { type: "Isolatie: stro", manufacturer: "EcoCocon s.r.o.", product: "Standaard en verstevigde stro panelen", carbon: -123.0, unit: "m2" },
   { type: "Isolatie: stro", manufacturer: "Gramitherm", product: "Gramitherm 100", carbon: -7.03, unit: "m3" },
 
@@ -100,7 +100,7 @@ export const PRODUCTS : ProductGroup[] = [
   {type: "Constructie: Hout", carbon: 618 }, //kg/m3 based on average of co2 content from oncra quickscan materials
   {type: "Constructie: CLT or LVL",carbon: 775}, //kg/m3 based on average of co2 content from oncra quickscan materials
  
-  {type: "Constructie: Spaanplaat", carbon: 1051 }, //kg/m3 based on average of co2 content from oncra quickscan materials
+  {type: "Constructie: OSB/Spaanplaat", carbon: 1051 }, //kg/m3 based on average of co2 content from oncra quickscan materials
   {type: "Isolatie: HSB met houtvezels", carbon: 198 }, //kg/m3 based on average of co2 content from oncra quickscan materials
   {type: "Isolatie: stro", carbon:175}, //kg/m3 bioblow stro
   {type: "Isolatie: hemp or flax", carbon:34}, //13,79 kg/m2! gemiddelde van quickscan materialen

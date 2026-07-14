@@ -15,6 +15,7 @@ import { makeStepBridge } from "../forms/makeStepBridge";
 import { ProjectplanFields } from "../features/validation";
 import { useSyncQuickScanFromPreScanElements } from "../features/quick-scan/useSyncQuickScanFromPrescan";
 import { BewijsDocuments } from "../features/validation/BewijsDocuments.js";
+import { Resultaatvalidatie } from "../features/validation/ResultaatValidatie.js";
 
 export default function App(): JSX.Element {
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -103,6 +104,8 @@ export default function App(): JSX.Element {
       <ProjectplanFields model={model} />
     ) : currentSub.render === "bewijsDocuments" ? (
       <BewijsDocuments />
+    ) : currentSub.render === "resultaatValidatie" ? (
+      <Resultaatvalidatie />
     )
     : isFinalOverview ? (
       <Review model={model} />
