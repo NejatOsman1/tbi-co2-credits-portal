@@ -112,8 +112,8 @@ export const steps: StepDef[] = [
       },
       {
         key: "resultaatValidatie",
-        label: "Resultaat validatie Oncra",
-        description: "Markeer validatie resultaat (dummy).",
+        label: "Validatie Oncra",
+        description: "",
         fields: [],
         zod: null,
         render: "resultaatValidatie"

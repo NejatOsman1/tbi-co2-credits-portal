@@ -4,12 +4,11 @@ import { Box, Button, Typography } from "@mui/material";
 export function Resultaatvalidatie() {
   return (
     <Box sx={{ display: "grid", gap: 2 }}>  
-      <Typography sx={{ mt: 3, mb: 1, fontSize: "0.9rem" }}>
-        Gefeliciteerd, uw project is nu gereed om ingediend te worden bij ONCRA. Door op onderstaande Download & Email projectplan te klikken wordt voor u een email aangemaakt en de benodigde bewijsstukken als een zipbestand gedownload. Het zip bestand moet u toevoegen aan de email en vervolgens versturen.
+      <Typography sx={{ mt: 2, mb: 1, fontSize: "0.9rem" }}>
+        Gefeliciteerd, wanneer u de email hebt verstuurd dan start de validatie process bij ONCRA. De berekeningen en bijlagen worden gecontroleerd en zij zullen met u contact opnemen in geval van vragen en de vervolgstappen.
       </Typography>
-
       <Typography sx={{ mt: 1, mb: 1, fontSize: "0.9rem" }}>
-        U kunt eerst ook het projectplan exporteren naar pdf ter controle en vervolgens zelf indienen bij ONCRA. Klik hiervoor op de knop "Export projectplan naar PDF" hieronder.
+        U kunt hier meer informatie vinden over het proces: <a href="https://oncra.org/removers/" target="_blank" rel="noopener noreferrer">ONCRA</a>
       </Typography>
     </Box>
   );
