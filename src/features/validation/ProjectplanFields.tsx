@@ -45,6 +45,20 @@ export function ProjectplanFields({ model }: { model: FormModel }) {
 
   return (
     <Box sx={{ display: "grid", gap: 2 }}>
+      
+      <TextField
+        name="projectplanNaam"
+        label="Naam aanvrager"
+        fullWidth
+      />
+
+      <TextField
+        name="projectplanEmail"
+        label="Email aanvrager"
+        type="email"
+        fullWidth
+      />
+      
       <TextField
         name="projectplanTitel"
         label="Projectnaam"
@@ -52,16 +66,44 @@ export function ProjectplanFields({ model }: { model: FormModel }) {
       />
 
       <TextField
-        name="projectplanNaam"
-        label="Naam"
+        name="projectplanBedrijfsnaam"
+        label="Bedrijfsnaam"
         fullWidth
       />
 
       <TextField
-        name="projectplanEmail"
-        label="Email"
-        type="email"
+        name="projectplanAdres"
+        label="Adres bedrijf"
         fullWidth
+      />
+
+      <NumField
+        name="projectplanKvkNummer"
+        label="KVK nummer bedrijf "
+        fullWidth
+      />
+
+
+      <TextField
+        name="projectplanLocatie"
+        label="Locatie project"
+        fullWidth
+      />
+
+      <TextField
+        name="projectplanStartdatum"
+        label="Startdatum project"
+        type="date"
+        fullWidth
+        InputLabelProps={{ shrink: true }}
+      />
+
+      <TextField
+        name="projectplanEinddatum"
+        label="Einddatum project"
+        type="date"
+        fullWidth
+        InputLabelProps={{ shrink: true }}
       />
 
       <NumField
@@ -79,7 +121,7 @@ export function ProjectplanFields({ model }: { model: FormModel }) {
 
       <NumField
         name="projectplanKvkNummer"
-        label="KVK nummer"
+        label="KVK nummer bedrijf "
         fullWidth
       />
 

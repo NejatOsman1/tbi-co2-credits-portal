@@ -310,7 +310,14 @@ export function BewijsDocuments() {
         >
           Download & E-mail Projectplan
         </Button>
-        <ExportProjectplanPdfButton />
+        <ExportProjectplanPdfButton
+          evidence={{
+            usedBiomaterials: selectedBiomaterialen,
+            buildingLifespan: selectedBuildingLifespan,
+            buildingPermit: selectedBuildingPermit,
+            woodSustainability: selectedDuurzaamHout,
+          }}
+        />
       </Box>
       
   </Box>
