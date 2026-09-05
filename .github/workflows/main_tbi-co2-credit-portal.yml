@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  BUILD_DIR: dist
+  DEPLOY_DIR: deploy
 
 jobs:
   build:
@@ -22,11 +22,22 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run build
+      - run: npm run build:server
+      - name: Remove dev-only dependencies from node_modules
+        run: npm prune --omit=dev
+      - name: Assemble deploy package
+        run: |
+          mkdir -p ${{ env.DEPLOY_DIR }}
+          cp -r dist ${{ env.DEPLOY_DIR }}/dist
+          cp -r server-dist ${{ env.DEPLOY_DIR }}/server-dist
+          cp -r node_modules ${{ env.DEPLOY_DIR }}/node_modules
+          cp package.json ${{ env.DEPLOY_DIR }}/package.json
+          cp package-lock.json ${{ env.DEPLOY_DIR }}/package-lock.json
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: vite-build
-          path: ${{ env.BUILD_DIR }}    # 👈 upload ONLY dist/
+          name: webapp-build
+          path: ${{ env.DEPLOY_DIR }}    # 👈 upload the whole deploy package
 
   deploy:
     runs-on: ubuntu-latest
@@ -38,8 +49,8 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: vite-build
-          path: ./dist                  # download into ./dist
+          name: webapp-build
+          path: ./${{ env.DEPLOY_DIR }}
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -53,4 +64,4 @@ jobs:
         with:
           app-name: 'TBI-CO2-Credit-Portal'
           slot-name: 'production'
-          package: ./dist               # 👈 deploy ONLY dist/
+          package: ./${{ env.DEPLOY_DIR }}    # 👈 deploy dist/ + server-dist/ + node_modules/ + package.json
