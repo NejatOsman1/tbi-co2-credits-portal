@@ -7,6 +7,14 @@ const bouwFasen = [
   "Uitvoeringsontwerp"
 ] as const;
 
+export const gebouwtypen = [
+  "Woningbouw, hellend dak",
+  "Woningbouw, plat dak",
+  "Woningbouw, gestapeld",
+  "Utiliteitsbouw, kantoren",
+  "Utiliteitsbouw, overig"
+] as const;
+
 export const projectplanSchema = z.object({
   projectplanTitel: z.string().min(1, "Titel is verplicht"),
   projectplanBeschrijving: z.string().min(1, "Beschrijving is verplicht"),
@@ -20,5 +28,7 @@ export const projectplanSchema = z.object({
   projectplanVloeroppervlak: z.number().positive("Vul een positief getal in"),
   projectplanProjectnummer: z.string().min(1, "Projectnummer is verplicht"),
   projectplanBouwfase: z.enum(bouwFasen, { required_error: "Kies een bouwfase" }),
+  projectplanGebouwtype: z.enum(gebouwtypen, { required_error: "Kies een gebouwtype" }),
   projectplanKvkNummer: z.number().min(1, "Voer uw KVK nummer in"),
+  projectplanRol: z.string().min(1, "Rol is verplicht"),
 });

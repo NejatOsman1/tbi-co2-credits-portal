@@ -4,6 +4,7 @@ import { TextField, NumField, SelectField } from "uniforms-mui";
 import { useForm } from "uniforms";
 import type { FormModel } from "../../forms/types";
 import { getPdfMetaFromStorage } from "../../utils/localStorage";
+import { gebouwtypen } from "./projectplanSchema";
 
 const bouwFasen = [
   "Schetsontwerp",
@@ -83,6 +84,11 @@ export function ProjectplanFields({ model }: { model: FormModel }) {
         fullWidth
       />
 
+      <TextField
+        name="projectplanRol"
+        label="Rol van bedrijf in project"
+        fullWidth
+      />
 
       <TextField
         name="projectplanLocatie"
@@ -119,16 +125,17 @@ export function ProjectplanFields({ model }: { model: FormModel }) {
         fullWidth
       />
 
-      <NumField
-        name="projectplanKvkNummer"
-        label="KVK nummer bedrijf "
-        fullWidth
-      />
-
       <SelectField
         name="projectplanBouwfase"
         label="Bouwfase"
         allowedValues={bouwFasen as unknown as string[]}
+        fullWidth
+      />
+
+      <SelectField
+        name="projectplanGebouwtype"
+        label="Gebouwtype"
+        allowedValues={gebouwtypen as unknown as string[]}
         fullWidth
       />
 

@@ -1,7 +1,10 @@
 import { Box, Button, Typography, TextField, IconButton, Tooltip, Link, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useForm } from "uniforms";
+import { api } from "../../api/client.js";
+import type { ProjectFile } from "../../api/types.js";
 import { ThemeProvider } from "@mui/material/styles";
 import { smallFormTheme } from "../../app/theme.js";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
@@ -40,9 +43,9 @@ interface DocumentUploadRowProps {
   selectedValue: string;
   onSelectChange: (e: SelectChangeEvent<string>) => void;
   fileKey: FileKey;
-  uploadedFiles: File[];
+  uploadedFiles: ProjectFile[];
   onFileChange: (key: FileKey) => (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onRemoveFile: (key: FileKey, index: number) => void;
+  onRemoveFile: (fileId: string) => void;
 }
 
 function DocumentUploadRow({
@@ -90,10 +93,10 @@ function DocumentUploadRow({
       </Button>
       {uploadedFiles.length > 0 && (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          {uploadedFiles.map((file, idx) => (
-            <Box key={idx} sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          {uploadedFiles.map((file) => (
+            <Box key={file.id} sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <Typography sx={{ fontSize: "0.85rem" }}>{file.name}</Typography>
-              <IconButton size="small" onClick={() => onRemoveFile(fileKey, idx)}>
+              <IconButton size="small" onClick={() => onRemoveFile(file.id)}>
                 <CloseIcon sx={{ fontSize: "1rem" }} />
               </IconButton>
             </Box>
@@ -124,46 +127,75 @@ export function BewijsDocuments() {
     }
   }, [rows.length]);
 
-  const [files, setFiles] = useState<Record<FileKey, File[]>>({ biomaterialen: [], mpgRapport: [], bouwkundigRapport: [], duurzaamHout: [] });
-  const [rowFiles, setRowFiles] = useState<Record<number, File | null>>({});
-  const [selectedBiomaterialen, setSelectedBiomaterialen] = useState<string>("");
-  const [selectedBuildingLifespan, setSelectedBuildingLifespan] = useState<string>("");  
-  const [selectedBuildingPermit, setSelectedBuildingPermit] = useState<string>("");
-  const [selectedDuurzaamHout, setSelectedDuurzaamHout] = useState<string>("");
+  // Uploads are stored on the project itself (blob storage via the API), so they
+  // survive navigating away from this step and are available on the next visit.
+  const { projectId } = useParams<{ projectId: string }>();
+  const [projectFiles, setProjectFiles] = useState<ProjectFile[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [fileError, setFileError] = useState("");
+
+  useEffect(() => {
+    if (!projectId) return;
+    api
+      .getProject(projectId)
+      .then((project) => setProjectFiles(project.files ?? []))
+      .catch(() => setFileError("Eerder geüploade bestanden konden niet worden geladen"));
+  }, [projectId]);
+
+  const filesFor = (key: FileKey) => projectFiles.filter((f) => f.category === key);
+  const rowFile = (index: number) =>
+    projectFiles.find((f) => f.category === "row" && f.rowIndex === index);
+
+  const uploadFiles = async (selected: File[], meta: { category: string; rowIndex?: number }) => {
+    if (!projectId || selected.length === 0) return;
+    setBusy(true);
+    setFileError("");
+    try {
+      for (const file of selected) {
+        const saved = await api.uploadProjectFile(projectId, file, meta);
+        setProjectFiles((prev) => [...prev, saved]);
+      }
+    } catch (e: any) {
+      setFileError(e?.message ?? "Uploaden is mislukt");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleRemoveFile = async (fileId: string) => {
+    if (!projectId) return;
+    setBusy(true);
+    setFileError("");
+    try {
+      await api.deleteProjectFile(projectId, fileId);
+      setProjectFiles((prev) => prev.filter((f) => f.id !== fileId));
+    } catch (e: any) {
+      setFileError(e?.message ?? "Verwijderen is mislukt");
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const handleFileChange = (key: FileKey) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files ? Array.from(e.target.files) : [];
-    setFiles((prev) => ({ ...prev, [key]: [...prev[key], ...selected] }));
     // Reset input so same file can be selected again
     e.target.value = "";
-  };
-
-  const handleRemoveFile = (key: FileKey, index: number) => {
-    setFiles((prev) => ({
-      ...prev,
-      [key]: prev[key].filter((_, i) => i !== index),
-    }));
+    void uploadFiles(selected, { category: key });
   };
 
   const handleRowFileChange = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0] ?? null;
-    setRowFiles((prev) => ({ ...prev, [index]: selected }));
+    const selected = e.target.files?.[0];
+    e.target.value = "";
+    if (!selected) return;
+    const previous = rowFile(index);
+    void (async () => {
+      if (previous) await handleRemoveFile(previous.id);
+      await uploadFiles([selected], { category: "row", rowIndex: index });
+    })();
   };
 
-  const handleBiomaterialenChange = (e: SelectChangeEvent<string>) => {
-    setSelectedBiomaterialen(e.target.value);
-  };
-
-  const handleBuildingLifespanChange = (e: SelectChangeEvent<string>) => {
-    setSelectedBuildingLifespan(e.target.value);
-  };
-
-  const handleBuildingPermitChange = (e: SelectChangeEvent<string>) => {
-    setSelectedBuildingPermit(e.target.value);
-  };
-
-  const handleDuurzaamHoutChange = (e: SelectChangeEvent<string>) => {
-  setSelectedDuurzaamHout(e.target.value);
+  const handleSelectChange = (field: string) => (e: SelectChangeEvent<string>) => {
+    onChange(field, e.target.value);
   };
 
   return (
@@ -176,10 +208,10 @@ export function BewijsDocuments() {
         labelId="biomaterialen-label"
         label="Gebruikte biomaterialen"
         options={biomaterialenOptions}
-        selectedValue={selectedBiomaterialen}
-        onSelectChange={handleBiomaterialenChange}
+        selectedValue={model?.bewijsBiomaterialen ?? ""}
+        onSelectChange={handleSelectChange("bewijsBiomaterialen")}
         fileKey="biomaterialen"
-        uploadedFiles={files.biomaterialen}
+        uploadedFiles={filesFor("biomaterialen")}
         onFileChange={handleFileChange}
         onRemoveFile={handleRemoveFile}
       />
@@ -188,10 +220,10 @@ export function BewijsDocuments() {
         labelId="milieu-impact-label"
         label="Milieu impact"
         options={buildingLifespanOptions}
-        selectedValue={selectedBuildingLifespan}
-        onSelectChange={handleBuildingLifespanChange}
+        selectedValue={model?.bewijsMilieuImpact ?? ""}
+        onSelectChange={handleSelectChange("bewijsMilieuImpact")}
         fileKey="mpgRapport"
-        uploadedFiles={files.mpgRapport}
+        uploadedFiles={filesFor("mpgRapport")}
         onFileChange={handleFileChange}
         onRemoveFile={handleRemoveFile}
       />
@@ -200,10 +232,10 @@ export function BewijsDocuments() {
         labelId="gebouwgegevens-label"
         label="Gebouwgegevens"
         options={buildingpermitOptions}
-        selectedValue={selectedBuildingPermit}
-        onSelectChange={handleBuildingPermitChange}
+        selectedValue={model?.bewijsGebouwgegevens ?? ""}
+        onSelectChange={handleSelectChange("bewijsGebouwgegevens")}
         fileKey="bouwkundigRapport"
-        uploadedFiles={files.bouwkundigRapport}
+        uploadedFiles={filesFor("bouwkundigRapport")}
         onFileChange={handleFileChange}
         onRemoveFile={handleRemoveFile}
       />
@@ -212,10 +244,10 @@ export function BewijsDocuments() {
         labelId="duurzaam-hout-label"
         label="Bewijs duurzaam hout"
         options={duurzaamHoutOptions}
-        selectedValue={selectedDuurzaamHout}
-        onSelectChange={handleDuurzaamHoutChange}
+        selectedValue={model?.bewijsDuurzaamHout ?? ""}
+        onSelectChange={handleSelectChange("bewijsDuurzaamHout")}
         fileKey="duurzaamHout"
-        uploadedFiles={files.duurzaamHout}
+        uploadedFiles={filesFor("duurzaamHout")}
         onFileChange={handleFileChange}
         onRemoveFile={handleRemoveFile}
       />
@@ -283,9 +315,9 @@ export function BewijsDocuments() {
               <UploadFileIcon sx={{ fontSize: "1.2rem" }} />
               <input type="file" hidden accept=".pdf,.doc,.docx,.jpg,.png" onChange={handleRowFileChange(i)} />
             </IconButton>
-            {rowFiles[i] && (
+            {rowFile(i) && (
               <Typography sx={{ fontSize: "0.75rem", color: "text.secondary" }}>
-                {rowFiles[i]!.name}
+                {rowFile(i)!.name}
               </Typography>
             )}
           </Box>
@@ -301,23 +333,25 @@ export function BewijsDocuments() {
         U kunt eerst ook het projectplan exporteren naar pdf ter controle en vervolgens zelf indienen bij ONCRA. Klik hiervoor op de knop "Export projectplan naar PDF" hieronder.
       </Typography>
 
+      {fileError && (
+        <Typography sx={{ color: "error.main", fontSize: "0.8rem" }}>{fileError}</Typography>
+      )}
+
       <Box sx={{ display: "flex", gap: 2, mt: 2, justifyContent: "center" }}>
         <Button
           variant="contained"
+          disabled={busy || !projectId}
           startIcon={<EmailIcon />}
-          onClick={() => handleEmailAndDownload({ model, files, rowFiles })}
+          onClick={() =>
+            handleEmailAndDownload({ model, projectId: projectId!, projectFiles }).catch((e) =>
+              setFileError(e?.message ?? "Downloaden is mislukt")
+            )
+          }
           sx={{ fontSize: "0.85rem", py: 1, minWidth: 260 }}
         >
           Download & E-mail Projectplan
         </Button>
-        <ExportProjectplanPdfButton
-          evidence={{
-            usedBiomaterials: selectedBiomaterialen,
-            buildingLifespan: selectedBuildingLifespan,
-            buildingPermit: selectedBuildingPermit,
-            woodSustainability: selectedDuurzaamHout,
-          }}
-        />
+        <ExportProjectplanPdfButton />
       </Box>
       
   </Box>

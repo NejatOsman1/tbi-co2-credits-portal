@@ -255,17 +255,7 @@ export const generateProjectplanPdf = (model: any): Blob => {
 // with the data already present in the app's form model. The template keeps
 // all of its own fonts, styles, tables and header/footer — only the {tags}
 // inside it are replaced.
-export interface EvidenceSelections {
-  usedBiomaterials?: string;
-  buildingLifespan?: string;
-  buildingPermit?: string;
-  woodSustainability?: string;
-}
-
-export const generateProjectplanDocx = async (
-  model: any,
-  evidence: EvidenceSelections = {}
-): Promise<Blob> => {
+export const generateProjectplanDocx = async (model: any): Promise<Blob> => {
   const res = await fetch("/projectplan_template.docx");
   if (!res.ok) {
     throw new Error("Kon het projectplan-sjabloon (projectplan_template.docx) niet laden");
@@ -327,7 +317,7 @@ export const generateProjectplanDocx = async (
     op1Registration: model.projectplanKvkNummer != null ? String(model.projectplanKvkNummer) : "",
     op1Address: model.projectplanAdres || "",
     op1Contact: model.projectplanEmail || "",
-    op1Role: "",
+    op1Role: model.projectplanRol || "",
 
     // Other project operators (Table 2) — not collected in this app
     otherOperators: [],
@@ -336,7 +326,7 @@ export const generateProjectplanDocx = async (
     products,
 
     // 2. Quality criteria — not collected in this app
-    baselineBuildingType: "",
+    baselineBuildingType: model.projectplanGebouwtype || "",
     additionalitySubsidy: "",
     additionalityValuation: "",
     lifespanCompliance: "",
@@ -361,10 +351,10 @@ export const generateProjectplanDocx = async (
     reporting: "",
 
     // Evidence dropdowns (BewijsDocuments step)
-    evidence_used_biomaterials: evidence.usedBiomaterials || "",
-    evidence_building_lifespan: evidence.buildingLifespan || "",
-    evidence_building_permit: evidence.buildingPermit || "",
-    "evidence_wood-sustainability": evidence.woodSustainability || "",
+    evidence_used_biomaterials: model.bewijsBiomaterialen || "",
+    evidence_building_lifespan: model.bewijsMilieuImpact || "",
+    evidence_building_permit: model.bewijsGebouwgegevens || "",
+    "evidence_wood-sustainability": model.bewijsDuurzaamHout || "",
   });
 
   return doc.getZip().generate({
@@ -373,14 +363,14 @@ export const generateProjectplanDocx = async (
   }) as Blob;
 };
 
-const ExportProjectplanPdfButton: React.FC<{ evidence?: EvidenceSelections }> = ({ evidence }) => {
+const ExportProjectplanPdfButton: React.FC = () => {
   const { model } = useForm<any>();
   const [error, setError] = useState("");
 
   const handleGenerate = async () => {
     setError("");
     try {
-      const blob = await generateProjectplanDocx(model, evidence);
+      const blob = await generateProjectplanDocx(model);
       saveAs(blob, `${model.projectplanTitel || "projectplan"}.docx`);
     } catch (e: any) {
       const detail =

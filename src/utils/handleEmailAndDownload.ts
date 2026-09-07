@@ -1,40 +1,43 @@
 import JSZip from "jszip";
-import { generateProjectplanPdf } from "./exportProjectplanPDF.js";
-
-type FileKey = "biomaterialen" | "bouwkundigRapport" | "mpgRapport";
+import { generateProjectplanDocx } from "./exportProjectplanPDF.js";
+import { api } from "../api/client.js";
+import type { ProjectFile } from "../api/types.js";
 
 interface HandleEmailAndDownloadParams {
   model: any;
-  files: Record<FileKey, File[]>;
-  rowFiles: Record<number, File | null>;
+  projectId: string;
+  projectFiles: ProjectFile[];
 }
 
 export const handleEmailAndDownload = async ({
   model,
-  files,
-  rowFiles,
+  projectId,
+  projectFiles,
 }: HandleEmailAndDownloadParams) => {
   const zip = new JSZip();
-  const allFiles: File[] = [];
 
-  // Generate and add projectplan PDF to ZIP
-  const pdfBlob = generateProjectplanPdf(model);
-  zip.file("projectplan-quickscan.pdf", pdfBlob);
+  // Generate and add projectplan Word document to ZIP
+  const docxName = `${model.projectplanTitel || "projectplan"}.docx`;
+  const docxBlob = await generateProjectplanDocx(model);
+  zip.file(docxName, docxBlob);
 
-  // Collect main document files (arrays)
-  allFiles.push(...files.biomaterialen);
-  allFiles.push(...files.bouwkundigRapport);
-  allFiles.push(...files.mpgRapport);
+  // Fetch the stored bewijsstukken from the project and add them to the ZIP.
+  // Names are de-duplicated so two uploads with the same filename both survive.
+  const usedNames = new Set<string>([docxName]);
+  const allFiles: string[] = [];
 
-  // Collect row files
-  Object.values(rowFiles).forEach((file) => {
-    if (file) allFiles.push(file);
-  });
+  for (const file of projectFiles) {
+    let name = file.name;
+    for (let n = 2; usedNames.has(name); n++) {
+      const dot = file.name.lastIndexOf(".");
+      name =
+        dot > 0 ? `${file.name.slice(0, dot)} (${n})${file.name.slice(dot)}` : `${file.name} (${n})`;
+    }
+    usedNames.add(name);
+    allFiles.push(name);
 
-  // Add files to ZIP
-  for (const file of allFiles) {
-    const arrayBuffer = await file.arrayBuffer();
-    zip.file(file.name, arrayBuffer);
+    const blob = await api.downloadProjectFile(projectId, file.id);
+    zip.file(name, blob);
   }
 
   // Generate and download ZIP
@@ -49,7 +52,7 @@ export const handleEmailAndDownload = async ({
   URL.revokeObjectURL(url);
 
   // Open email with prefilled content
-  const allFileNames = ["projectplan-quickscan.pdf", ...allFiles.map((f) => f.name)];
+  const allFileNames = [docxName, ...allFiles];
   const projectName = model.projectplanTitel || "Onbekend project";
   const subject = encodeURIComponent(`TBI CO2 Credits - Certificering: ${projectName}`);
   const body = encodeURIComponent(

@@ -1,5 +1,5 @@
 import type { FormModel } from "../forms/types";
-import type { AuthUser, Project, ProjectSummary } from "./types";
+import type { AuthUser, Project, ProjectFile, ProjectSummary } from "./types";
 
 const TOKEN_KEY = "co2portal_token";
 
@@ -47,6 +47,16 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ email, password }),
     }),
+  forgotPassword: (email: string) =>
+    request<{ message: string }>("/auth/forgot-password", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    }),
+  resetPassword: (token: string, password: string) =>
+    request<{ token: string; user: AuthUser }>("/auth/reset-password", {
+      method: "POST",
+      body: JSON.stringify({ token, password }),
+    }),
   listProjects: () => request<ProjectSummary[]>("/projects"),
   createProject: (name?: string) =>
     request<Project>("/projects", { method: "POST", body: JSON.stringify({ name }) }),
@@ -55,4 +65,44 @@ export const api = {
     id: string,
     patch: { formData: Partial<FormModel>; activeStep: number; activeSub: number; name?: string }
   ) => request<Project>(`/projects/${id}`, { method: "PUT", body: JSON.stringify(patch) }),
+
+  uploadProjectFile: async (
+    projectId: string,
+    file: File,
+    meta: { category: string; rowIndex?: number }
+  ): Promise<ProjectFile> => {
+    const params = new URLSearchParams({ name: file.name, category: meta.category });
+    if (meta.rowIndex !== undefined) params.set("rowIndex", String(meta.rowIndex));
+
+    const token = getToken();
+    const res = await fetch(`/api/projects/${projectId}/files?${params}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": file.type || "application/octet-stream",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: file,
+    });
+    const data = await res.json().catch(() => undefined);
+    if (!res.ok) throw new ApiError(res.status, data?.error ?? "Uploaden is mislukt");
+    return data as ProjectFile;
+  },
+
+  downloadProjectFile: async (projectId: string, fileId: string): Promise<Blob> => {
+    const token = getToken();
+    const res = await fetch(`/api/projects/${projectId}/files/${fileId}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) throw new ApiError(res.status, "Downloaden is mislukt");
+    return res.blob();
+  },
+
+  deleteProjectFile: async (projectId: string, fileId: string): Promise<void> => {
+    const token = getToken();
+    const res = await fetch(`/api/projects/${projectId}/files/${fileId}`, {
+      method: "DELETE",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) throw new ApiError(res.status, "Verwijderen is mislukt");
+  },
 };

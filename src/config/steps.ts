@@ -97,6 +97,8 @@ export const steps: StepDef[] = [
           "projectplanVloeroppervlak",
           "projectplanProjectnummer",
           "projectplanBouwfase",
+          "projectplanGebouwtype",
+          "projectplanRol",
           "projectplanBeschrijving"
         ],
         zod: projectplanSchema,

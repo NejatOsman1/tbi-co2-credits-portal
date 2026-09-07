@@ -37,8 +37,14 @@ export const FullSchema = z.object({
   projectplanVloeroppervlak: projectplanSchema.shape.projectplanVloeroppervlak.optional(),
   projectplanProjectnummer: projectplanSchema.shape.projectplanProjectnummer.optional(),
   projectplanBouwfase: projectplanSchema.shape.projectplanBouwfase.optional(),
+  projectplanGebouwtype: projectplanSchema.shape.projectplanGebouwtype.optional(),
+  projectplanRol: projectplanSchema.shape.projectplanRol.optional(),
 
   bewijsLinks: bewijsSchema.shape.bewijsLinks.optional(),
+  bewijsBiomaterialen: bewijsSchema.shape.bewijsBiomaterialen,
+  bewijsMilieuImpact: bewijsSchema.shape.bewijsMilieuImpact,
+  bewijsGebouwgegevens: bewijsSchema.shape.bewijsGebouwgegevens,
+  bewijsDuurzaamHout: bewijsSchema.shape.bewijsDuurzaamHout,
 
   validatieGoedgekeurd: z.boolean().optional(),
   validatieToelichting: validatieResultSchema.shape.validatieToelichting.optional(),
