@@ -22,6 +22,9 @@ export function QuickScanFields() {
       <Typography variant="subtitle2" sx={{ mb: 1 }}>
         Op basis van het gebruik van de biobased materialen krijgt u snel inzicht in het aantal CO2 credits die u kunt genereren voor uw project.
       </Typography>
+      <Typography variant="subtitle2" sx={{ mb: 1 }}>
+        Vul hierdoor de materialen in die u wilt gebruiken. U kunt meerdere materialen toevoegen door op het plusje te klikken. Houd er rekening mee dat u alleen CO2 credits kan aanvragen voor producten die een levensduur van 35 jaar of meer hebben.
+      </Typography>
       <ThemeProvider theme={smallFormTheme}>
             <ListField name="quickScan" label="">
               <NestField name="$" label="">

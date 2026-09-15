@@ -5,6 +5,7 @@ import { quickScanRow } from "../features/quick-scan/schema";
 import {
   oncraResultSchema,
   projectplanSchema,
+  risicoRow,
   bewijsSchema,
   validatieResultSchema,
   publiceerFotoSchema,
@@ -39,6 +40,7 @@ export const FullSchema = z.object({
   projectplanBouwfase: projectplanSchema.shape.projectplanBouwfase.optional(),
   projectplanGebouwtype: projectplanSchema.shape.projectplanGebouwtype.optional(),
   projectplanRol: projectplanSchema.shape.projectplanRol.optional(),
+  risicos: z.array(risicoRow).optional(),
 
   bewijsLinks: bewijsSchema.shape.bewijsLinks.optional(),
   bewijsBiomaterialen: bewijsSchema.shape.bewijsBiomaterialen,

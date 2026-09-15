@@ -15,6 +15,14 @@ export const gebouwtypen = [
   "Utiliteitsbouw, overig"
 ] as const;
 
+// Risico's uit tabel 5 van het projectplan; de gebruiker kan er meerdere toevoegen.
+export const risicoRow = z.object({
+  risico: z.string().optional(),
+  kans: z.string().optional(),
+  impact: z.string().optional(),
+  maatregel: z.string().optional(),
+});
+
 export const projectplanSchema = z.object({
   projectplanTitel: z.string().min(1, "Titel is verplicht"),
   projectplanBeschrijving: z.string().min(1, "Beschrijving is verplicht"),

@@ -344,8 +344,15 @@ export const generateProjectplanDocx = async (model: any): Promise<Blob> => {
     sustBiodiversityMin: "",
     sustBiodiversityAbove: "",
 
-    // Risks — not collected in this app
-    risks: [],
+    // Risks (tabel 5), zoals ingevuld op de stap "Upload bewijsstukken"
+    risks: (model.risicos ?? [])
+      .filter((r: any) => r?.risico || r?.kans || r?.impact || r?.maatregel)
+      .map((r: any) => ({
+        risk: r.risico || "",
+        likelihood: r.kans || "",
+        impact: r.impact || "",
+        mitigation: r.maatregel || "",
+      })),
 
     // 3. Monitoring, reporting, verification
     reporting: "",
