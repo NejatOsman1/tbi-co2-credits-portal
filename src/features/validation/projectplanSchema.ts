@@ -15,6 +15,11 @@ export const gebouwtypen = [
   "Utiliteitsbouw, overig"
 ] as const;
 
+export const projectTypes = [
+  "Gegroepeerd (meerdere locaties/operators)",
+  "Enkelvoudig (één hoofdoperator/locatie)"
+] as const;
+
 // Risico's uit tabel 5 van het projectplan; de gebruiker kan er meerdere toevoegen.
 export const risicoRow = z.object({
   risico: z.string().optional(),
@@ -31,6 +36,7 @@ export const projectplanSchema = z.object({
   projectplanBedrijfsnaam: z.string().min(1, "Bedrijfsnaam is verplicht"),
   projectplanAdres: z.string().min(1, "Adres is verplicht"),
   projectplanLocatie: z.string().min(1, "Locatie is verplicht"),
+  projectplanProjectType: z.enum(projectTypes, { required_error: "Kies een projecttype" }),
   projectplanStartdatum: z.string().min(1, "Startdatum is verplicht"),
   projectplanEinddatum: z.string().min(1, "Einddatum is verplicht"),
   projectplanVloeroppervlak: z.number().positive("Vul een positief getal in"),

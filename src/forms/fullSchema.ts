@@ -33,6 +33,7 @@ export const FullSchema = z.object({
   projectplanBedrijfsnaam: projectplanSchema.shape.projectplanBedrijfsnaam.optional(),
   projectplanAdres: projectplanSchema.shape.projectplanAdres.optional(),
   projectplanLocatie: projectplanSchema.shape.projectplanLocatie.optional(),
+  projectplanProjectType: projectplanSchema.shape.projectplanProjectType.optional(),
   projectplanStartdatum: projectplanSchema.shape.projectplanStartdatum.optional(),
   projectplanEinddatum: projectplanSchema.shape.projectplanEinddatum.optional(),
   projectplanVloeroppervlak: projectplanSchema.shape.projectplanVloeroppervlak.optional(),

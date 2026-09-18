@@ -5,7 +5,7 @@ import { TextField, NumField, SelectField } from "uniforms-mui";
 import { useForm } from "uniforms";
 import type { FormModel } from "../../forms/types";
 import { getPdfMetaFromStorage } from "../../utils/localStorage";
-import { gebouwtypen } from "./projectplanSchema";
+import { gebouwtypen, projectTypes } from "./projectplanSchema";
 
 const bouwFasen = [
   "Schetsontwerp",
@@ -121,6 +121,13 @@ export function ProjectplanFields({ model }: { model: FormModel }) {
       <TextField
         name="projectplanLocatie"
         label="Locatie project"
+        fullWidth
+      />
+
+      <SelectField
+        name="projectplanProjectType"
+        label="Projecttype"
+        allowedValues={projectTypes as unknown as string[]}
         fullWidth
       />
 
